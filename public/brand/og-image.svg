@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#0D1F5C"/>
+  <rect x="0" y="0" width="1200" height="6" fill="#D4A017"/>
+  <defs>
+    <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
+      <path d="M 60 0 L 0 0 0 60" fill="none" stroke="#ffffff" stroke-width="0.3" opacity="0.08"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+  <polygon points="900,0 1200,0 1200,630 1050,630" fill="#D4A017" opacity="0.07"/>
+  <!-- Emblème boussole -->
+  <circle cx="140" cy="315" r="70" fill="#00289A"/>
+  <circle cx="140" cy="315" r="60" fill="none" stroke="#D4A017" stroke-width="5"/>
+  <circle cx="140" cy="315" r="38" fill="#0D1F5C"/>
+  <circle cx="140" cy="315" r="26" fill="#D4A017"/>
+  <circle cx="140" cy="315" r="14" fill="#0D1F5C"/>
+  <polygon points="140,270 145,295 140,320 135,295" fill="#D4A017" opacity="0.9"/>
+  <polygon points="185,315 160,320 135,315 160,310" fill="#D4A017" opacity="0.9"/>
+  <polygon points="163,288 152,308 140,316 151,297" fill="#D4A017" opacity="0.7"/>
+  <polygon points="117,288 128,308 140,316 129,297" fill="#D4A017" opacity="0.7"/>
+  <!-- XP-NOVA -->
+  <text x="240" y="285" font-family="Georgia, serif" font-weight="900" font-size="80" fill="#ffffff" letter-spacing="4">XP-NOVA</text>
+  <!-- Baseline C19 -->
+  <text x="242" y="340" font-family="Arial, sans-serif" font-weight="400" font-size="26" fill="#D4A017" letter-spacing="2">Bureau d'Ingénierie Conseil</text>
+  <rect x="240" y="370" width="600" height="2" fill="#D4A017" opacity="0.5"/>
+  <text x="242" y="415" font-family="Arial, sans-serif" font-weight="300" font-size="22" fill="#ffffff" opacity="0.75">Concevoir · Structurer · Piloter · Sécuriser</text>
+  <text x="242" y="490" font-family="Arial, sans-serif" font-weight="400" font-size="18" fill="#D4A017" opacity="0.8">xp-nova.com</text>
+  <rect x="0" y="624" width="1200" height="6" fill="#D4A017"/>
+</svg>

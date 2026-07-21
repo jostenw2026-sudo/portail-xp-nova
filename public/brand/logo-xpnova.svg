@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 96" width="420" height="96">
+  <g transform="translate(48,48)">
+    <g fill="#D4A830">
+      <rect x="-7" y="-48" width="14" height="13" rx="2" transform="rotate(0)"/>
+      <rect x="-7" y="-48" width="14" height="13" rx="2" transform="rotate(30)"/>
+      <rect x="-7" y="-48" width="14" height="13" rx="2" transform="rotate(60)"/>
+      <rect x="-7" y="-48" width="14" height="13" rx="2" transform="rotate(90)"/>
+      <rect x="-7" y="-48" width="14" height="13" rx="2" transform="rotate(120)"/>
+      <rect x="-7" y="-48" width="14" height="13" rx="2" transform="rotate(150)"/>
+      <rect x="-7" y="-48" width="14" height="13" rx="2" transform="rotate(180)"/>
+      <rect x="-7" y="-48" width="14" height="13" rx="2" transform="rotate(210)"/>
+      <rect x="-7" y="-48" width="14" height="13" rx="2" transform="rotate(240)"/>
+      <rect x="-7" y="-48" width="14" height="13" rx="2" transform="rotate(270)"/>
+      <rect x="-7" y="-48" width="14" height="13" rx="2" transform="rotate(300)"/>
+      <rect x="-7" y="-48" width="14" height="13" rx="2" transform="rotate(330)"/>
+    </g>
+    <circle r="38" fill="none" stroke="#D4A830" stroke-width="4"/>
+    <circle r="36" fill="#0B2545"/>
+    <polygon points="0,-30 4,-8 0,-3 -4,-8" fill="#D4A830"/>
+    <polygon points="0,30 4,8 0,3 -4,8" fill="#D4A830"/>
+    <polygon points="-30,0 -8,4 -3,0 -8,-4" fill="#D4A830"/>
+    <polygon points="30,0 8,4 3,0 8,-4" fill="#D4A830"/>
+    <polygon points="22,-22 6,-3 3,-3 3,-6" fill="#B8900F"/>
+    <polygon points="-22,-22 -3,-6 -3,-3 -6,-3" fill="#B8900F"/>
+    <polygon points="22,22 3,6 3,3 6,3" fill="#B8900F"/>
+    <polygon points="-22,22 -6,3 -3,3 -3,6" fill="#B8900F"/>
+    <circle r="5.5" fill="#D4A830"/>
+    <circle r="3" fill="#F5D060"/>
+  </g>
+  <text x="108" y="68" font-family="Arial Black,Impact,Franklin Gothic Heavy,Arial,sans-serif" font-size="56" font-weight="900" fill="#FFFFFF" letter-spacing="2">XP-NOVA</text>
+</svg>

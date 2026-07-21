@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#0D1F5C"/>
+  <rect x="0" y="0" width="1200" height="6" fill="#D4A017"/>
+  <defs>
+    <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
+      <path d="M 60 0 L 0 0 0 60" fill="none" stroke="#ffffff" stroke-width="0.3" opacity="0.08"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+  <circle cx="140" cy="200" r="60" fill="#00289A"/>
+  <circle cx="140" cy="200" r="50" fill="none" stroke="#D4A017" stroke-width="5"/>
+  <circle cx="140" cy="200" r="30" fill="#0D1F5C"/>
+  <circle cx="140" cy="200" r="18" fill="#D4A017"/>
+  <text x="230" y="180" font-family="Georgia, serif" font-weight="900" font-size="72" fill="#ffffff" letter-spacing="4">XP-NOVA</text>
+  <text x="232" y="228" font-family="Arial, sans-serif" font-weight="700" font-size="26" fill="#D4A017" letter-spacing="3">BUREAU D'INGÉNIERIE CONSEIL</text>
+  <rect x="80" y="300" width="1040" height="2" fill="#D4A017" opacity="0.4"/>
+  <text x="80" y="370" font-family="Georgia, serif" font-weight="700" font-size="34" fill="#ffffff">Une même ingénierie, deux domaines d'application</text>
+  <rect x="80" y="410" width="480" height="120" rx="8" fill="#ffffff" opacity="0.06"/>
+  <rect x="80" y="410" width="6" height="120" fill="#2E7D32"/>
+  <text x="110" y="455" font-family="Arial, sans-serif" font-weight="800" font-size="26" fill="#ffffff">AGROVITA</text>
+  <text x="110" y="490" font-family="Arial, sans-serif" font-size="18" fill="#C9D0E8">Agriculture · Élevage · Agro-industrie</text>
+  <text x="110" y="515" font-family="Arial, sans-serif" font-size="15" fill="#D4A017">agrovita.xp-nova.com</text>
+  <rect x="620" y="410" width="480" height="120" rx="8" fill="#ffffff" opacity="0.06"/>
+  <rect x="620" y="410" width="6" height="120" fill="#0FA3B1"/>
+  <text x="650" y="455" font-family="Arial, sans-serif" font-weight="800" font-size="26" fill="#ffffff">ODT</text>
+  <text x="650" y="490" font-family="Arial, sans-serif" font-size="18" fill="#C9D0E8">Développement territorial · Ingénierie</text>
+  <text x="650" y="515" font-family="Arial, sans-serif" font-size="15" fill="#D4A017">odt.xp-nova.com</text>
+  <text x="80" y="590" font-family="Arial, sans-serif" font-size="18" fill="#C9D0E8" opacity="0.85">xp-nova.com — Yaoundé, Cameroun</text>
+  <rect x="0" y="624" width="1200" height="6" fill="#D4A017"/>
+</svg>

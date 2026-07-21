@@ -1,26 +1,167 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ============================================================
+   XP-NOVA — Bureau d'Ingénierie Conseil
+   Design tokens — Annexe A du CDC V1.2
+   navy #0D1F5C · royal #00289A · gold #D4A017
+   Playfair Display (titres) + Source Sans 3 (corps)
+   ============================================================ */
+
+@font-face {
+  font-family: "Playfair Display";
+  src: url("/fonts/PlayfairDisplay.ttf") format("truetype");
+  font-weight: 400 900;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Source Sans 3";
+  src: url("/fonts/SourceSans3.ttf") format("truetype");
+  font-weight: 200 900;
+  font-display: swap;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+@theme {
+  --color-navy: #0d1f5c;
+  --color-royal: #00289a;
+  --color-gold: #d4a017;
+  --color-gold-soft: #e9c25a;
+  --color-ink: #1a1a2e;
+  --color-grey: #5a6072;
+  --color-light: #f4f5f8;
+  --color-line: #e2e5ec;
+  --color-paper: #ffffff;
+
+  --font-display: "Playfair Display", Georgia, serif;
+  --font-sans: "Source Sans 3", system-ui, sans-serif;
+
+  --breakpoint-sm: 375px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1440px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* --- Styles d'éléments dans @layer base : les utilitaires Tailwind
+       (text-white, mt-12, etc.) les surchargent correctement. --- */
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    color: var(--color-ink);
+    background: var(--color-paper);
+    line-height: 1.6;
+    font-size: 1.0625rem;
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    color: var(--color-navy);
+    line-height: 1.15;
+    margin: 0;
+    text-wrap: balance;
+  }
+
+  a {
+    color: var(--color-royal);
+    text-decoration: none;
+  }
+  a:hover {
+    text-decoration: underline;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-royal);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      transition-duration: 0.001ms !important;
+    }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* --- Classes de composition dans @layer components : surchargables
+       par les utilitaires appliqués sur le même élément. --- */
+@layer components {
+  /* Classes de titre nommées title-* pour NE PAS entrer en collision
+     avec les utilitaires de hauteur Tailwind h-1/h-2/h-3 (0.25/0.5/0.75rem). */
+  .title-hero {
+    font-size: clamp(2.25rem, 1.4rem + 3.6vw, 4rem);
+    font-weight: 800;
+    line-height: 1.1;
+  }
+  .title-1 {
+    font-size: clamp(1.9rem, 1.3rem + 2.4vw, 3rem);
+    font-weight: 800;
+    line-height: 1.15;
+  }
+  .title-2 {
+    font-size: clamp(1.45rem, 1.1rem + 1.4vw, 2.1rem);
+    font-weight: 700;
+    line-height: 1.2;
+  }
+  .title-3 {
+    font-size: clamp(1.15rem, 1rem + 0.6vw, 1.4rem);
+    font-weight: 700;
+    line-height: 1.25;
+  }
+
+  /* Surtitre — charte narrative §6.3 */
+  .eyebrow {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 0.8rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-gold);
+    margin: 0;
+  }
+
+  /* Filet or sous H1 — motif du template documentaire (Annexe A.4) */
+  .gold-rule::after {
+    content: "";
+    display: block;
+    width: 3.5rem;
+    height: 3px;
+    background: var(--color-gold);
+    margin-top: 0.9rem;
+    border-radius: 2px;
+  }
+
+  .container-x {
+    width: 100%;
+    max-width: 1200px;
+    margin-inline: auto;
+    padding-inline: clamp(1.1rem, 0.5rem + 2vw, 2.5rem);
+  }
+
+  .prose-x p {
+    margin: 0 0 1rem;
+    max-width: 68ch;
+  }
+  .prose-x .lead {
+    font-size: 1.2rem;
+    color: var(--color-grey);
+    font-weight: 300;
+    border-left: 3px solid var(--color-gold);
+    padding-left: 1rem;
+    max-width: 60ch;
+  }
 }
