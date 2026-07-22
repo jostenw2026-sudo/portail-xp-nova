@@ -34,10 +34,10 @@ export default function Header() {
           <Image
             src="/brand/logo_xpnova_color.png"
             alt="XP-NOVA — Bureau d'Ingénierie Conseil"
-            width={200}
-            height={46}
+            width={350}
+            height={80}
             priority
-            className="h-10 w-auto"
+            className="h-[70px] w-auto"
           />
         </Link>
 

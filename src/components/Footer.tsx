@@ -12,9 +12,9 @@ export default function Footer() {
           <Image
             src="/brand/logo_xpnova_white.png"
             alt="XP-NOVA — Bureau d'Ingénierie Conseil"
-            width={200}
-            height={46}
-            className="h-10 w-auto"
+            width={350}
+            height={80}
+            className="h-[70px] w-auto"
           />
           <p className="mt-4 text-sm text-white/70 max-w-xs">
             {site.baseline}. {site.devise}
