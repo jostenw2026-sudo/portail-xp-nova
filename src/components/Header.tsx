@@ -13,7 +13,7 @@ export default function Header() {
       <div className="bg-navy text-white/90 text-sm">
         <div className="container-x flex items-center justify-between py-1.5">
           <span className="hidden sm:inline text-white/70">
-            Nos domaines d&apos;application :{" "}
+            Écosystème :{" "}
             {site.ecosystem.map((e, i) => (
               <span key={e.key}>
                 <a href={e.url} target="_blank" rel="noopener" className="text-gold hover:underline">

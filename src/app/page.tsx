@@ -5,6 +5,16 @@ import { StatsBar, ProcessTimeline, Trajectoire, Pillars, CTABanner } from "@/co
 import { metiers } from "@/content/metiers";
 import { featuredReferences } from "@/content/references";
 
+// Audiences institutionnelles servies par ODT (issues du support « Institutions »).
+const AUDIENCES = [
+  { t: "États & ministères", d: "Politiques publiques, programmes sectoriels, maîtrise d'ouvrage publique." },
+  { t: "Collectivités territoriales", d: "Communes, départements, régions : projets et infrastructures locales." },
+  { t: "Bailleurs, banques & assurances", d: "Projets bancables, décaissements sur jalons, reporting d'impact." },
+  { t: "ONG & projets de développement", d: "Structuration, ancrage économique et redevabilité mesurable." },
+  { t: "Agences de normalisation & certification", d: "Conformité, qualité et accès aux marchés exigeants." },
+  { t: "Agences & établissements publics", d: "Assistance à maîtrise d'ouvrage et pilotage d'opérations." },
+];
+
 export default function Home() {
   return (
     <>
@@ -40,14 +50,31 @@ export default function Home() {
 
       <Section>
         <SectionTitle
-          eyebrow="Nos domaines d'application"
-          title="Une ingénierie, deux terrains d'application"
-          intro="XP-NOVA porte les métiers. Leurs applications sectorielles sont conduites par nos plateformes dédiées."
+          eyebrow="L'écosystème XP-NOVA"
+          title="ODT, une branche du Bureau d'Ingénierie Conseil"
+          intro="ODT applique l'ingénierie XP-NOVA au développement territorial. Découvrez le portail du cabinet et notre branche agricole & agro-industrielle."
         />
         <EcosystemBlock />
       </Section>
 
       <Section tone="light">
+        <SectionTitle
+          eyebrow="Pour qui ?"
+          title="Au service des institutions et des territoires"
+          intro="ODT accompagne les acteurs publics et institutionnels dans la conception, le financement et la mise en œuvre de projets structurants."
+        />
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {AUDIENCES.map((a) => (
+            <div key={a.t} className="rounded-lg border border-line bg-paper p-6">
+              <div className="mb-3 h-1 w-8 rounded bg-gold" />
+              <h3 className="title-3 text-navy">{a.t}</h3>
+              <p className="mt-2 text-grey">{a.d}</p>
+            </div>
+          ))}
+        </div>
+      </Section>
+
+      <Section>
         <SectionTitle eyebrow="Pourquoi XP-NOVA" title="Quatre raisons de nous confier votre projet" />
         <Pillars />
       </Section>

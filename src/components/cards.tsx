@@ -111,7 +111,7 @@ export function CardSecteur({
     >
       <div>
         <span className="text-xs font-semibold uppercase tracking-wide text-gold">
-          Domaine d&apos;application · site dédié
+          Écosystème XP-NOVA · site dédié
         </span>
         <h3 className="title-3 mt-2 text-navy">{name}</h3>
         <p className="mt-1 text-grey">{tagline}</p>

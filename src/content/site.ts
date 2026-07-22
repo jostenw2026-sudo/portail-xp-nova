@@ -30,18 +30,20 @@ export const site = {
     { value: "5", label: "pays d'intervention" },
     { value: "48 h", label: "premier retour" },
   ],
+  // Cet écosystème est celui affiché DEPUIS le site ODT : on pointe vers le
+  // portail (hub) et la branche sœur AGROVITA — pas d'auto-référence à ODT.
   ecosystem: [
+    {
+      key: "portail",
+      name: "XP-NOVA",
+      tagline: "Portail — Bureau d'Ingénierie Conseil",
+      url: "https://xp-nova.com",
+    },
     {
       key: "agrovita",
       name: "AGROVITA",
       tagline: "Agriculture & agro-industrie",
       url: "https://agrovita.xp-nova.com",
-    },
-    {
-      key: "odt",
-      name: "ODT",
-      tagline: "Développement territorial",
-      url: "https://odt.xp-nova.com",
     },
   ],
 } as const;
