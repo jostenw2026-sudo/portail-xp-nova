@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { portal, branches, metiers, methode, piliers, stats } from "@/content/portal";
 import { HeroBlueprint, MotifAgro, MotifTerritory } from "@/components/illustrations";
+import ContactForm from "@/components/ContactForm";
 
 const motifs: Record<string, React.ReactNode> = {
   agrovita: <MotifAgro className="h-full w-full" />,
@@ -32,7 +33,7 @@ export default function Home() {
               </a>
             ))}
             <a
-              href={`mailto:${portal.email}`}
+              href="#contact"
               className="rounded-md bg-gold px-4 py-2 text-navy no-underline hover:bg-gold-soft"
             >
               Contact
@@ -195,25 +196,29 @@ export default function Home() {
         </p>
       </section>
 
-      {/* ---------- CTA FINAL ---------- */}
-      <section className="bg-navy text-white">
-        <div className="container-x flex flex-col items-center gap-6 py-16 text-center md:py-20">
-          <h2 className="title-1 !text-white">Un projet à structurer&nbsp;?</h2>
-          <p className="max-w-xl text-white/80">
-            Identifiez votre domaine et échangez avec l&apos;équipe : un premier retour sous 48 h
-            ouvrées.
-          </p>
-          <div className="flex flex-wrap justify-center gap-4">
-            {branches.map((b) => (
-              <a
-                key={b.key}
-                href={b.url}
-                className="rounded-md border border-white/30 px-6 py-3 font-semibold text-white no-underline hover:border-gold hover:text-gold"
-              >
-                {b.name} — {b.host}
-              </a>
-            ))}
+      {/* ---------- CONTACT (formulaire → Odoo) ---------- */}
+      <section id="contact" className="scroll-mt-20 bg-navy text-white">
+        <div className="container-x grid gap-10 py-16 md:py-20 lg:grid-cols-2">
+          <div>
+            <p className="eyebrow">Parlons de votre projet</p>
+            <h2 className="title-1 mt-3 !text-white">Un projet à structurer&nbsp;?</h2>
+            <p className="mt-4 max-w-md text-white/80">
+              Décrivez votre besoin : un expert vous répond sous 48 h ouvrées. Vous pouvez aussi
+              accéder directement au site dédié à votre domaine.
+            </p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              {branches.map((b) => (
+                <a
+                  key={b.key}
+                  href={b.url}
+                  className="rounded-md border border-white/30 px-5 py-2.5 text-sm font-semibold text-white no-underline hover:border-gold hover:text-gold"
+                >
+                  {b.name} — {b.host}
+                </a>
+              ))}
+            </div>
           </div>
+          <ContactForm />
         </div>
         <div className="h-1 bg-gold" />
       </section>
