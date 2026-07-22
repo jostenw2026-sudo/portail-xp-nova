@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: "Références projets",
   description:
     "Aéroports, équipements publics, bâtiments, énergie, eau : les références de nos experts dans 6 pays d'Afrique.",
-  alternates: { canonical: "/references" },
+  alternates: { canonical: "/references", languages: { fr: "/references", en: "/en/references" } },
 };
 
 export default function ReferencesPage() {

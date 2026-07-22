@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   title: "Métiers d'ingénierie : études, AMO, MOE",
   description:
     "7 métiers pour sécuriser vos projets : études, ingénierie, AMO/AMOA, maîtrise d'œuvre, structuration, suivi-évaluation, formation.",
-  alternates: { canonical: "/metiers" },
+  alternates: { canonical: "/metiers", languages: { fr: "/metiers", en: "/en/metiers" } },
 };
 
 export default function MetiersPage() {

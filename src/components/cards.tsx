@@ -3,12 +3,16 @@ import type { Metier } from "@/content/metiers";
 import type { Reference } from "@/content/references";
 import type { Expert } from "@/content/experts";
 import { site } from "@/content/site";
+import { siteEn } from "@/content/en";
 import { MetierIcon, RefIllustration, refCategory } from "./illustrations";
 
-export function CardMetier({ m }: { m: Metier }) {
+type Lang = "fr" | "en";
+const p = (lang: Lang, path: string) => (lang === "en" ? `/en${path}` : path);
+
+export function CardMetier({ m, lang = "fr" }: { m: Metier; lang?: Lang }) {
   return (
     <Link
-      href={`/metiers/${m.slug}`}
+      href={p(lang, `/metiers/${m.slug}`)}
       className="group block rounded-lg border border-line bg-paper p-6 no-underline transition-shadow hover:shadow-lg"
     >
       <div className="mb-4 grid h-12 w-12 place-items-center rounded-lg bg-navy text-gold transition-colors group-hover:bg-royal">
@@ -16,15 +20,17 @@ export function CardMetier({ m }: { m: Metier }) {
       </div>
       <h3 className="title-3 text-navy group-hover:text-royal">{m.title}</h3>
       <p className="mt-2 text-grey">{m.short}</p>
-      <span className="mt-4 inline-block text-royal font-semibold">Découvrir →</span>
+      <span className="mt-4 inline-block text-royal font-semibold">
+        {lang === "en" ? "Discover →" : "Découvrir →"}
+      </span>
     </Link>
   );
 }
 
-export function CardReference({ r }: { r: Reference }) {
+export function CardReference({ r, lang = "fr" }: { r: Reference; lang?: Lang }) {
   return (
     <Link
-      href={`/references/${r.slug}`}
+      href={p(lang, `/references/${r.slug}`)}
       className="group flex flex-col rounded-lg border border-line bg-paper overflow-hidden no-underline transition-shadow hover:shadow-lg"
     >
       <div className="relative overflow-hidden bg-navy text-white p-5">
@@ -43,15 +49,18 @@ export function CardReference({ r }: { r: Reference }) {
       <div className="p-5 flex-1 flex flex-col">
         <p className="text-sm text-grey">{r.typeMission}</p>
         <p className="mt-1 text-sm text-ink/80">
-          <span className="font-semibold">Donneur d&apos;ordre :</span> {r.client}
+          <span className="font-semibold">{lang === "en" ? "Contracting authority:" : "Donneur d'ordre :"}</span>{" "}
+          {r.client}
         </p>
-        <span className="mt-auto pt-4 text-royal font-semibold">Voir la référence →</span>
+        <span className="mt-auto pt-4 text-royal font-semibold">
+          {lang === "en" ? "View reference →" : "Voir la référence →"}
+        </span>
       </div>
     </Link>
   );
 }
 
-export function CardExpert({ e }: { e: Expert }) {
+export function CardExpert({ e, lang = "fr" }: { e: Expert; lang?: Lang }) {
   return (
     <div className="rounded-lg border border-line bg-paper p-6">
       <div className="flex items-center gap-4">
@@ -80,11 +89,11 @@ export function CardExpert({ e }: { e: Expert }) {
       </div>
       <dl className="mt-4 grid grid-cols-2 gap-3 text-sm">
         <div>
-          <dt className="text-grey">Langues</dt>
+          <dt className="text-grey">{lang === "en" ? "Languages" : "Langues"}</dt>
           <dd className="font-semibold text-ink">{e.langues.join(", ")}</dd>
         </div>
         <div>
-          <dt className="text-grey">Pays</dt>
+          <dt className="text-grey">{lang === "en" ? "Countries" : "Pays"}</dt>
           <dd className="font-semibold text-ink">{e.pays.join(", ")}</dd>
         </div>
       </dl>
@@ -97,10 +106,12 @@ export function CardSecteur({
   name,
   tagline,
   url,
+  lang = "fr",
 }: {
   name: string;
   tagline: string;
   url: string;
+  lang?: Lang;
 }) {
   return (
     <a
@@ -111,21 +122,24 @@ export function CardSecteur({
     >
       <div>
         <span className="text-xs font-semibold uppercase tracking-wide text-gold">
-          Écosystème XP-NOVA · site dédié
+          {lang === "en" ? "XP-NOVA ecosystem · dedicated site" : "Écosystème XP-NOVA · site dédié"}
         </span>
         <h3 className="title-3 mt-2 text-navy">{name}</h3>
         <p className="mt-1 text-grey">{tagline}</p>
       </div>
-      <span className="mt-6 font-semibold text-royal">Visiter {name} →</span>
+      <span className="mt-6 font-semibold text-royal">
+        {lang === "en" ? `Visit ${name} →` : `Visiter ${name} →`}
+      </span>
     </a>
   );
 }
 
-export function EcosystemBlock() {
+export function EcosystemBlock({ lang = "fr" }: { lang?: Lang }) {
+  const eco = lang === "en" ? siteEn.ecosystem : site.ecosystem;
   return (
     <div className="grid gap-5 sm:grid-cols-2">
-      {site.ecosystem.map((e) => (
-        <CardSecteur key={e.key} name={e.name} tagline={e.tagline} url={e.url} />
+      {eco.map((e) => (
+        <CardSecteur key={e.key} name={e.name} tagline={e.tagline} url={e.url} lang={lang} />
       ))}
     </div>
   );

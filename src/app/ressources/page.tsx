@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: "Ressources : profils, brochures, publications",
   description:
     "Company profile, capability statement, politiques et publications techniques à télécharger ou à demander.",
-  alternates: { canonical: "/ressources" },
+  alternates: { canonical: "/ressources", languages: { fr: "/ressources", en: "/en/ressources" } },
 };
 
 function Item({ r }: { r: (typeof ressources)[number] }) {

@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: "Le Cabinet",
   description:
     "20 ans d'existence, 37 ans d'expérience d'ingénierie : vision, valeurs, gouvernance et trajectoire du cabinet XP-NOVA à Yaoundé.",
-  alternates: { canonical: "/cabinet" },
+  alternates: { canonical: "/cabinet", languages: { fr: "/cabinet", en: "/en/cabinet" } },
 };
 
 const valeurs = [

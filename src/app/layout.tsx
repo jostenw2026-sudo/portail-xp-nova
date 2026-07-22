@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     description: site.description,
   },
   icons: { icon: "/favicon.svg" },
-  alternates: { canonical: "/" },
+  alternates: { canonical: "/", languages: { fr: "/", en: "/en" } },
 };
 
 export default function RootLayout({

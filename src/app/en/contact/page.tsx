@@ -2,31 +2,29 @@ import type { Metadata } from "next";
 import { PageHero, Breadcrumbs } from "@/components/blocks";
 import { Section } from "@/components/ui";
 import ContactForm from "@/components/ContactForm";
-import { JsonLd, breadcrumbLd } from "@/components/JsonLd";
 import { site } from "@/content/site";
 
 export const metadata: Metadata = {
   title: "Contact",
   description:
-    "Décrivez votre projet : un expert vous répond sous 48 h. Yaoundé, Cameroun — interventions en Afrique centrale et de l'Ouest.",
-  alternates: { canonical: "/contact", languages: { fr: "/contact", en: "/en/contact" } },
+    "Tell us about your project: an expert replies within 48 h. Yaoundé, Cameroon — operations across Central and West Africa.",
+  alternates: { canonical: "/en/contact", languages: { fr: "/contact", en: "/en/contact" } },
 };
 
-export default function ContactPage() {
+export default function ContactPageEn() {
   return (
     <>
       <PageHero
         eyebrow="Contact"
-        title="Parlons de votre projet"
-        lead="La prise de contact est libre et sans engagement. Un expert vous répond sous 48 h ouvrées."
+        title="Let's discuss your project"
+        lead="Getting in touch is free and without commitment. An expert replies within 48 business hours."
       />
-      <Breadcrumbs items={[{ label: "Contact" }]} />
-      <JsonLd data={breadcrumbLd([{ label: "Contact", href: "/contact" }])} />
+      <Breadcrumbs items={[{ label: "Contact" }]} lang="en" />
       <Section>
         <div className="grid gap-12 lg:grid-cols-[1fr_320px]">
-          <ContactForm />
+          <ContactForm lang="en" />
           <aside className="h-fit rounded-lg border border-line bg-light p-6">
-            <p className="eyebrow mb-3">Nous joindre</p>
+            <p className="eyebrow mb-3">Reach us</p>
             <address className="not-italic space-y-3 text-ink/90">
               <p>{site.address}</p>
               <p>

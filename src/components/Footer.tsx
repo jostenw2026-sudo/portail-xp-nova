@@ -1,8 +1,37 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { nav, site } from "@/content/site";
+import { navEn, siteEn } from "@/content/en";
 
 export default function Footer() {
+  const pathname = usePathname() ?? "/";
+  const en = pathname === "/en" || pathname.startsWith("/en/");
+  const NAV = en ? navEn : nav;
+  const t = en
+    ? {
+        tagline: `${siteEn.baseline}. ${siteEn.devise}`,
+        navigation: "Navigation",
+        engagements: "Commitments",
+        engagementsHref: "/en/engagements",
+        ecosystem: "Ecosystem",
+        contact: "Contact",
+        legalNotice: "Legal notice",
+        privacy: "Privacy",
+      }
+    : {
+        tagline: `${site.baseline}. ${site.devise}`,
+        navigation: "Navigation",
+        engagements: "Engagements",
+        engagementsHref: "/engagements",
+        ecosystem: "Écosystème",
+        contact: "Contact",
+        legalNotice: "Mentions légales",
+        privacy: "Confidentialité",
+      };
+
   return (
     <footer className="bg-navy text-white/80">
       {/* Liseré or supérieur — signature template documentaire (Annexe A.4) */}
@@ -16,15 +45,13 @@ export default function Footer() {
             height={80}
             className="h-[70px] w-auto"
           />
-          <p className="mt-4 text-sm text-white/70 max-w-xs">
-            {site.baseline}. {site.devise}
-          </p>
+          <p className="mt-4 text-sm text-white/70 max-w-xs">{t.tagline}</p>
         </div>
 
         <div>
-          <p className="font-bold text-white mb-3">Navigation</p>
+          <p className="font-bold text-white mb-3">{t.navigation}</p>
           <ul className="space-y-2 text-sm">
-            {nav.map((n) => (
+            {NAV.map((n) => (
               <li key={n.href}>
                 <Link href={n.href} className="text-white/70 hover:text-gold no-underline">
                   {n.label}
@@ -32,17 +59,17 @@ export default function Footer() {
               </li>
             ))}
             <li>
-              <Link href="/engagements" className="text-white/70 hover:text-gold no-underline">
-                Engagements
+              <Link href={t.engagementsHref} className="text-white/70 hover:text-gold no-underline">
+                {t.engagements}
               </Link>
             </li>
           </ul>
         </div>
 
         <div>
-          <p className="font-bold text-white mb-3">Écosystème</p>
+          <p className="font-bold text-white mb-3">{t.ecosystem}</p>
           <ul className="space-y-2 text-sm">
-            {site.ecosystem.map((e) => (
+            {(en ? siteEn.ecosystem : site.ecosystem).map((e) => (
               <li key={e.key}>
                 <a href={e.url} target="_blank" rel="noopener" className="text-white/70 hover:text-gold">
                   {e.name} — {e.tagline}
@@ -53,7 +80,7 @@ export default function Footer() {
         </div>
 
         <div>
-          <p className="font-bold text-white mb-3">Contact</p>
+          <p className="font-bold text-white mb-3">{t.contact}</p>
           <address className="not-italic text-sm space-y-1 text-white/70">
             <p>{site.address}</p>
             <p>
@@ -73,15 +100,15 @@ export default function Footer() {
       <div className="border-t border-white/15">
         <div className="container-x py-5 flex flex-col sm:flex-row gap-2 justify-between text-xs text-white/55">
           <p>
-            © {new Date().getFullYear()} {site.legalName} — {site.legal.forme}, capital{" "}
+            © {new Date().getFullYear()} {site.legalName} — {site.legal.forme}, {en ? "capital" : "capital"}{" "}
             {site.legal.capital} · RCCM {site.legal.rccm} · NIU {site.legal.niu}
           </p>
           <p className="flex gap-4">
-            <Link href="/mentions-legales" className="text-white/55 hover:text-gold no-underline">
-              Mentions légales
+            <Link href={en ? "/mentions-legales" : "/mentions-legales"} className="text-white/55 hover:text-gold no-underline">
+              {t.legalNotice}
             </Link>
-            <Link href="/confidentialite" className="text-white/55 hover:text-gold no-underline">
-              Confidentialité
+            <Link href={en ? "/confidentialite" : "/confidentialite"} className="text-white/55 hover:text-gold no-underline">
+              {t.privacy}
             </Link>
           </p>
         </div>

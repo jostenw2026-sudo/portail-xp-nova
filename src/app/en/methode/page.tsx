@@ -1,30 +1,28 @@
 import type { Metadata } from "next";
 import { PageHero, Breadcrumbs, CTABanner } from "@/components/blocks";
 import { Section } from "@/components/ui";
-import { phases } from "@/content/methode";
-import { JsonLd, breadcrumbLd } from "@/components/JsonLd";
+import { phasesEn } from "@/content/en";
 
 export const metadata: Metadata = {
-  title: "Méthode d'ingénierie en 6 phases",
+  title: "6-phase engineering method",
   description:
-    "Comprendre, concevoir, structurer, réaliser, pérenniser, mesurer : la méthode XP-NOVA pour des projets sécurisés.",
-  alternates: { canonical: "/methode", languages: { fr: "/methode", en: "/en/methode" } },
+    "Understand, design, structure, deliver, sustain, measure: the XP-NOVA method for secured projects.",
+  alternates: { canonical: "/en/methode", languages: { fr: "/methode", en: "/en/methode" } },
 };
 
-export default function MethodePage() {
+export default function MethodePageEn() {
   return (
     <>
       <PageHero
-        eyebrow="Notre méthode"
-        title="Une approche orientée résultats"
-        lead="Six phases enchaînées, chacune sanctionnée par un livrable vérifiable. C'est cette discipline qui sécurise vos projets."
+        eyebrow="Our method"
+        title="A results-oriented approach"
+        lead="Six chained phases, each closed by a verifiable deliverable. It is this discipline that secures your projects."
       />
-      <Breadcrumbs items={[{ label: "Notre méthode" }]} />
-      <JsonLd data={breadcrumbLd([{ label: "Notre méthode", href: "/methode" }])} />
+      <Breadcrumbs items={[{ label: "Our method" }]} lang="en" />
 
       <Section>
         <ol className="space-y-6">
-          {phases.map((p) => (
+          {phasesEn.map((p) => (
             <li
               key={p.key}
               className="grid gap-6 rounded-lg border border-line bg-paper p-6 md:grid-cols-[auto_1fr]"
@@ -40,7 +38,7 @@ export default function MethodePage() {
                 <p className="mt-2 text-ink/90">{p.objectif}</p>
                 <div className="mt-4 grid gap-4 sm:grid-cols-2">
                   <div>
-                    <p className="text-xs font-semibold uppercase text-grey">Activités</p>
+                    <p className="text-xs font-semibold uppercase text-grey">Activities</p>
                     <ul className="mt-1 flex flex-wrap gap-2">
                       {p.activites.map((a) => (
                         <li key={a} className="rounded bg-light px-2.5 py-1 text-xs text-navy">
@@ -50,7 +48,7 @@ export default function MethodePage() {
                     </ul>
                   </div>
                   <div>
-                    <p className="text-xs font-semibold uppercase text-grey">Livrables</p>
+                    <p className="text-xs font-semibold uppercase text-grey">Deliverables</p>
                     <ul className="mt-1 space-y-1">
                       {p.livrables.map((l) => (
                         <li key={l} className="text-sm text-ink/90">
@@ -66,7 +64,7 @@ export default function MethodePage() {
         </ol>
       </Section>
 
-      <CTABanner />
+      <CTABanner lang="en" />
     </>
   );
 }

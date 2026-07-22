@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   title: "Nos experts",
   description:
     "Une équipe pluridisciplinaire et un réseau d'experts mobilisables, aux CV conformes aux standards des bailleurs.",
-  alternates: { canonical: "/equipe" },
+  alternates: { canonical: "/equipe", languages: { fr: "/equipe", en: "/en/equipe" } },
 };
 
 export default function EquipePage() {

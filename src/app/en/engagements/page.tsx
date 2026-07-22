@@ -1,39 +1,37 @@
 import type { Metadata } from "next";
 import { PageHero, Breadcrumbs, CTABanner } from "@/components/blocks";
 import { Section, SectionTitle } from "@/components/ui";
-import { engagements } from "@/content/engagements";
-import { JsonLd, breadcrumbLd } from "@/components/JsonLd";
+import { engagementsEn } from "@/content/en";
 
 export const metadata: Metadata = {
-  title: "ESG, qualité, anti-corruption — Nos engagements",
+  title: "ESG, quality, anti-corruption — Our commitments",
   description:
-    "Politiques ESG, genre et inclusion, anti-corruption, qualité et HSE : nos engagements publiés et vérifiables.",
-  alternates: { canonical: "/engagements", languages: { fr: "/engagements", en: "/en/engagements" } },
+    "ESG, gender and inclusion, anti-corruption, quality and HSE policies: our published, verifiable commitments.",
+  alternates: { canonical: "/en/engagements", languages: { fr: "/engagements", en: "/en/engagements" } },
 };
 
-export default function EngagementsPage() {
+export default function EngagementsPageEn() {
   return (
     <>
       <PageHero
-        eyebrow="Engagements & conformité"
-        title="Nos engagements, publiés et vérifiables"
-        lead="Aux standards des bailleurs internationaux : environnement, social, gouvernance, éthique, qualité et sécurité."
+        eyebrow="Commitments & compliance"
+        title="Our commitments, published and verifiable"
+        lead="To international development-partner standards: environment, social, governance, ethics, quality and safety."
       />
-      <Breadcrumbs items={[{ label: "Engagements" }]} />
-      <JsonLd data={breadcrumbLd([{ label: "Engagements", href: "/engagements" }])} />
+      <Breadcrumbs items={[{ label: "Commitments" }]} lang="en" />
       <Section>
         <SectionTitle
-          eyebrow="Nos politiques"
-          title="Cinq engagements formalisés"
-          intro="Le cadre est posé ci-dessous. Les politiques détaillées sont en cours de publication."
+          eyebrow="Our policies"
+          title="Five formalised commitments"
+          intro="The framework is set out below. The detailed policies are being published."
         />
         <div className="grid gap-6 md:grid-cols-2">
-          {engagements.map((e) => (
+          {engagementsEn.map((e) => (
             <div key={e.key} className="rounded-lg border border-line bg-paper p-6">
               <div className="flex items-center justify-between">
                 <h3 className="title-3 text-navy">{e.title}</h3>
                 <span className="text-xs font-semibold text-gold">
-                  {e.docStatus === "public" ? "PDF disponible" : "À paraître"}
+                  {e.docStatus === "public" ? "PDF available" : "Coming soon"}
                 </span>
               </div>
               <p className="mt-2 text-grey">{e.pitch}</p>
@@ -49,7 +47,7 @@ export default function EngagementsPage() {
           ))}
         </div>
       </Section>
-      <CTABanner />
+      <CTABanner lang="en" />
     </>
   );
 }
