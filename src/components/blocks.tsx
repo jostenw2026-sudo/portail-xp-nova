@@ -95,7 +95,7 @@ export function Trajectoire() {
 // 4 piliers — "Pourquoi XP-NOVA" (D5 conservé — CDC §2.1)
 export function Pillars() {
   const pillars = [
-    { t: "Expérience", d: "37 ans de pratique des grands projets, dans 5 pays." },
+    { t: "Expérience", d: "37 ans de pratique des grands projets, dans 6 pays." },
     { t: "Méthode", d: "Six phases outillées, un livrable vérifiable à chaque étape." },
     { t: "Réseau d'experts", d: "Un noyau permanent et des capacités mobilisables en groupement." },
     { t: "Orientation résultats", d: "Des projets sécurisés, finançables et durables." },

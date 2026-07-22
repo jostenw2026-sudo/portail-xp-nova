@@ -32,7 +32,7 @@ export const experts: Expert[] = [
       "MEP, électricité HT/BT, énergies renouvelables",
     ],
     langues: ["Français", "Anglais"],
-    pays: ["Cameroun", "Burkina Faso", "Gabon", "Guinée équatoriale", "RCA"],
+    pays: ["Cameroun", "Burkina Faso", "Gabon", "Guinée équatoriale", "RCA", "Congo"],
     projets: [
       "Barrage de Kikot-Mbebe (coordination BIM, 2024-2025)",
       "Complexe olympique d'Olembé",

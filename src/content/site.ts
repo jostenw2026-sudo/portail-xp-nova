@@ -5,9 +5,11 @@ export const site = {
   name: "XP-NOVA",
   baseline: "Bureau d'Ingénierie Conseil", // C19 — baseline exclusive
   legalName: "XP-NOVA SARL",
-  domainProd: "odt.xp-nova.com",
+  // Bascule A.1 (CDC-ODT-V2, validée 22/07/2026) : ce site — le site des métiers —
+  // retourne sur l'apex xp-nova.com ; odt.xp-nova.com porte la plateforme ODT V2.
+  domainProd: "xp-nova.com",
   domainChantier: "bingeco.xp-nova.com",
-  url: "https://odt.xp-nova.com",
+  url: "https://xp-nova.com",
   devise: "Concevoir. Structurer. Piloter. Sécuriser.",
   manifesto: "Les projets ne manquent pas d'ambition. Ils manquent d'ingénierie.",
   description:
@@ -27,23 +29,22 @@ export const site = {
   proofStats: [
     { value: "7", label: "métiers d'ingénierie" },
     { value: "6", label: "phases de méthode" },
-    { value: "5", label: "pays d'intervention" },
+    { value: "6", label: "pays d'intervention" },
     { value: "48 h", label: "premier retour" },
   ],
-  // Cet écosystème est celui affiché DEPUIS le site ODT : on pointe vers le
-  // portail (hub) et la branche sœur AGROVITA — pas d'auto-référence à ODT.
+  // Écosystème affiché depuis le site mère xp-nova.com : les deux branches.
   ecosystem: [
-    {
-      key: "portail",
-      name: "XP-NOVA",
-      tagline: "Portail — Bureau d'Ingénierie Conseil",
-      url: "https://xp-nova.com",
-    },
     {
       key: "agrovita",
       name: "AGROVITA",
       tagline: "Agriculture & agro-industrie",
       url: "https://agrovita.xp-nova.com",
+    },
+    {
+      key: "odt",
+      name: "ODT",
+      tagline: "Opérateur de Développement Territorial",
+      url: "https://odt.xp-nova.com",
     },
   ],
 } as const;
