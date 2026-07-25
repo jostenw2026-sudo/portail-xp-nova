@@ -624,7 +624,8 @@ export const ressourcesEn: (Ressource & { typeLabel: string })[] = [
     typeLabel: "Profile",
     desc: "A concise 2–4 page overview: practices, references, strengths. For first contacts and pre-qualifications.",
     acces: "public",
-    docStatus: "a-paraitre",
+    docStatus: "public",
+    file: "capability-statement.pdf",
   },
   {
     key: "company-profile",
@@ -633,7 +634,8 @@ export const ressourcesEn: (Ressource & { typeLabel: string })[] = [
     typeLabel: "Profile",
     desc: "Full institutional presentation: vision, history, practices, method, team, references, governance.",
     acces: "public",
-    docStatus: "a-paraitre",
+    docStatus: "public",
+    file: "company-profile.pdf",
   },
   {
     key: "referentiel-methodologique",
@@ -642,7 +644,18 @@ export const ressourcesEn: (Ressource & { typeLabel: string })[] = [
     typeLabel: "Publication",
     desc: "The XP-NOVA method in 6 phases, detailed with its deliverables.",
     acces: "public",
-    docStatus: "a-paraitre",
+    docStatus: "public",
+    file: "referentiel-methodologique.pdf",
+  },
+  {
+    key: "referentiel-pacte",
+    title: "PACTE framework",
+    type: "Publication",
+    typeLabel: "Publication",
+    desc: "The PACTE model: Produce · Aggregate · Commercialise · Transform · Export.",
+    acces: "public",
+    docStatus: "public",
+    file: "pacte-framework-en.pdf",
   },
   {
     key: "cv-experts",
@@ -651,7 +664,7 @@ export const ressourcesEn: (Ressource & { typeLabel: string })[] = [
     typeLabel: "Profile",
     desc: "Standardised CVs compliant with development-partner requirements, shared on justified request.",
     acces: "sur-demande",
-    docStatus: "a-paraitre",
+    docStatus: "public",
   },
   {
     key: "dossier-administratif",
@@ -660,6 +673,6 @@ export const ressourcesEn: (Ressource & { typeLabel: string })[] = [
     typeLabel: "Publication",
     desc: "Administrative and compliance documents, shared on request within a procurement procedure.",
     acces: "sur-demande",
-    docStatus: "a-paraitre",
+    docStatus: "public",
   },
 ];
