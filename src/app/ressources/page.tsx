@@ -18,7 +18,7 @@ export default function RessourcesPage() {
       <PageHero
         eyebrow="Ressources"
         title="Centre de ressources"
-        lead="Nos documents institutionnels et publications techniques. Certains sont en libre téléchargement, d'autres transmis sur demande dans le cadre d'une procédure."
+        lead="Nos documents institutionnels et publications techniques sont transmis sur demande : inscrivez-vous, votre demande est validée, puis le document vous est envoyé — une procédure qui nous permet de savoir à qui nous nous adressons."
       />
       <Breadcrumbs items={[{ label: "Ressources" }]} />
       <JsonLd data={breadcrumbLd([{ label: "Ressources", href: "/ressources" }])} />

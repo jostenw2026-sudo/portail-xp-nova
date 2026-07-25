@@ -623,9 +623,8 @@ export const ressourcesEn: (Ressource & { typeLabel: string })[] = [
     type: "Profil",
     typeLabel: "Profile",
     desc: "A concise 2–4 page overview: practices, references, strengths. For first contacts and pre-qualifications.",
-    acces: "public",
+    acces: "sur-demande",
     docStatus: "public",
-    file: "capability-statement.pdf",
   },
   {
     key: "company-profile",
@@ -633,9 +632,8 @@ export const ressourcesEn: (Ressource & { typeLabel: string })[] = [
     type: "Profil",
     typeLabel: "Profile",
     desc: "Full institutional presentation: vision, history, practices, method, team, references, governance.",
-    acces: "public",
+    acces: "sur-demande",
     docStatus: "public",
-    file: "company-profile.pdf",
   },
   {
     key: "referentiel-methodologique",
@@ -643,9 +641,8 @@ export const ressourcesEn: (Ressource & { typeLabel: string })[] = [
     type: "Publication",
     typeLabel: "Publication",
     desc: "The XP-NOVA method in 6 phases, detailed with its deliverables.",
-    acces: "public",
+    acces: "sur-demande",
     docStatus: "public",
-    file: "referentiel-methodologique.pdf",
   },
   {
     key: "referentiel-pacte",
@@ -653,9 +650,8 @@ export const ressourcesEn: (Ressource & { typeLabel: string })[] = [
     type: "Publication",
     typeLabel: "Publication",
     desc: "The PACTE model: Produce · Aggregate · Commercialise · Transform · Export.",
-    acces: "public",
+    acces: "sur-demande",
     docStatus: "public",
-    file: "pacte-framework-en.pdf",
   },
   {
     key: "cv-experts",

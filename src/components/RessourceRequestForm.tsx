@@ -38,8 +38,8 @@ export default function RessourceRequestForm({
     return (
       <p className="mt-3 rounded-md bg-light p-3 text-sm text-navy">
         {en
-          ? "Thank you — your request has been received. An expert will send you the document within 48 business hours."
-          : "Merci — votre demande a bien été reçue. Un expert vous transmet le document sous 48 h ouvrées."}
+          ? "Thank you — your registration has been recorded. After validation, the document will be sent to you by email (usually within 48 business hours)."
+          : "Merci — votre inscription est enregistrée. Après validation, le document vous sera transmis par e-mail (généralement sous 48 h ouvrées)."}
       </p>
     );
   }
