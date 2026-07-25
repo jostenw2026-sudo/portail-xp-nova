@@ -1,7 +1,10 @@
-// Ressources téléchargeables — CDC V1.2 §7.3 (matrice public / sur demande).
-// docStatus "a-paraitre" tant que le document n'est pas produit ; "public" une fois produit.
-// Documents publics : téléchargement direct depuis /public/ressources/<file>.
-// Documents "sur-demande" : formulaire de demande -> lead Odoo (aucun fichier exposé).
+// Ressources — accès CONTRÔLÉ (CDC V1.3).
+// Aucun téléchargement libre : chaque document est transmis APRÈS inscription
+// (capture du lead dans Odoo) ET validation manuelle. Les PDF ne sont donc PAS
+// servis publiquement — ils ne figurent pas dans /public.
+//
+// acces  : toujours "sur-demande" désormais.
+// docStatus : "a-paraitre" tant que le document n'est pas produit ; "public" = produit (demandable).
 
 export type Ressource = {
   key: string;
@@ -10,8 +13,6 @@ export type Ressource = {
   desc: string;
   acces: "public" | "sur-demande";
   docStatus: "public" | "a-paraitre";
-  file?: string; // nom du PDF dans /public/ressources/ (documents publics)
-  fileEn?: string; // version anglaise éventuelle
 };
 
 export const ressources: Ressource[] = [
@@ -20,37 +21,32 @@ export const ressources: Ressource[] = [
     title: "Capability Statement",
     type: "Profil",
     desc: "Présentation synthétique (2-4 pages) : métiers, références, atouts. Pour prises de contact et préqualifications.",
-    acces: "public",
+    acces: "sur-demande",
     docStatus: "public",
-    file: "capability-statement.pdf",
   },
   {
     key: "company-profile",
     title: "Company Profile",
     type: "Profil",
     desc: "Présentation institutionnelle complète : vision, histoire, métiers, méthode, équipe, références, gouvernance.",
-    acces: "public",
+    acces: "sur-demande",
     docStatus: "public",
-    file: "company-profile.pdf",
   },
   {
     key: "referentiel-methodologique",
     title: "Référentiel méthodologique",
     type: "Publication",
     desc: "La méthode XP-NOVA en 6 phases, détaillée avec ses livrables.",
-    acces: "public",
+    acces: "sur-demande",
     docStatus: "public",
-    file: "referentiel-methodologique.pdf",
   },
   {
     key: "referentiel-pacte",
     title: "Référentiel PACTE",
     type: "Publication",
     desc: "Le modèle PACTE : Produire · Agréger · Commercialiser · Transformer · Exporter.",
-    acces: "public",
+    acces: "sur-demande",
     docStatus: "public",
-    file: "referentiel-pacte.pdf",
-    fileEn: "pacte-framework-en.pdf",
   },
   {
     key: "cv-experts",

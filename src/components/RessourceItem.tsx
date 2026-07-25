@@ -4,10 +4,9 @@ import { useState } from "react";
 import type { Ressource } from "@/content/ressources";
 import RessourceRequestForm from "@/components/RessourceRequestForm";
 
-// Carte d'une ressource. Trois cas :
-//  - à paraître        -> badge "À paraître"
-//  - public + fichier  -> téléchargement direct (+ version EN si dispo)
-//  - sur-demande       -> bouton qui déplie le formulaire de demande (lead Odoo)
+// Carte d'une ressource — accès contrôlé.
+//  - à paraître  -> badge "À paraître"
+//  - produit     -> bouton qui déplie le formulaire d'inscription (lead Odoo, validation manuelle)
 
 export default function RessourceItem({
   r,
@@ -21,9 +20,7 @@ export default function RessourceItem({
 
   const T = {
     aParaitre: en ? "Coming soon" : "À paraître",
-    download: en ? "Download" : "Télécharger",
-    request: en ? "Request access" : "Demander l'accès",
-    free: en ? "Free download" : "Téléchargement libre",
+    request: en ? "Register to receive" : "S'inscrire pour recevoir",
     onRequest: en ? "On request" : "Sur demande",
   };
 
@@ -31,9 +28,7 @@ export default function RessourceItem({
     <div className="flex flex-col rounded-lg border border-line bg-paper p-6">
       <div className="flex items-center justify-between">
         <span className="rounded bg-light px-2.5 py-1 text-xs font-semibold text-navy">{r.typeLabel ?? r.type}</span>
-        <span className={`text-xs font-semibold ${r.acces === "public" ? "text-royal" : "text-gold"}`}>
-          {r.acces === "public" ? T.free : T.onRequest}
-        </span>
+        <span className="text-xs font-semibold text-gold">{T.onRequest}</span>
       </div>
       <h3 className="title-3 mt-3 text-navy">{r.title}</h3>
       <p className="mt-2 flex-1 text-grey">{r.desc}</p>
@@ -43,27 +38,6 @@ export default function RessourceItem({
           <span className="inline-block rounded-md border border-line px-4 py-2 text-sm text-grey">
             {T.aParaitre}
           </span>
-        ) : r.acces === "public" && r.file ? (
-          <div className="flex flex-wrap gap-2">
-            <a
-              href={`/ressources/${r.file}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block rounded-md bg-gold px-4 py-2 text-sm font-semibold text-navy hover:bg-gold-soft"
-            >
-              {T.download}
-            </a>
-            {r.fileEn && (
-              <a
-                href={`/ressources/${r.fileEn}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block rounded-md border border-line px-4 py-2 text-sm font-semibold text-navy"
-              >
-                EN
-              </a>
-            )}
-          </div>
         ) : !open ? (
           <button
             type="button"

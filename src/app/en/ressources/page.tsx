@@ -17,7 +17,7 @@ export default function RessourcesPageEn() {
       <PageHero
         eyebrow="Resources"
         title="Resource centre"
-        lead="Our institutional documents and technical publications. Some are free to download, others shared on request within a procedure."
+        lead="Our institutional documents and technical publications are shared on request: register, your request is validated, then the document is sent to you — a process that lets us know who we are dealing with."
       />
       <Breadcrumbs items={[{ label: "Resources" }]} lang="en" />
       <Section>
