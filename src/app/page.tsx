@@ -1,9 +1,8 @@
 import Hero from "@/components/Hero";
 import { Section, SectionTitle, Button } from "@/components/ui";
-import { CardMetier, CardReference, EcosystemBlock } from "@/components/cards";
+import { CardMetier, EcosystemBlock } from "@/components/cards";
 import { StatsBar, ProcessTimeline, Trajectoire, Pillars, CTABanner } from "@/components/blocks";
 import { metiers } from "@/content/metiers";
-import { featuredReferences } from "@/content/references";
 
 // Audiences institutionnelles servies par ODT (issues du support « Institutions »).
 const AUDIENCES = [
@@ -86,24 +85,6 @@ export default function Home() {
           intro="La société existe depuis 2006 ; elle s'adosse à la trajectoire de son promoteur, ingénieur depuis 1989."
         />
         <Trajectoire />
-      </Section>
-
-      <Section tone="light">
-        <SectionTitle
-          eyebrow="Quelques références"
-          title="Des projets menés dans des contextes exigeants"
-          intro="Chaque référence indique son cadre d'intervention — la transparence est notre première preuve."
-        />
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {featuredReferences.slice(0, 6).map((r) => (
-            <CardReference key={r.slug} r={r} />
-          ))}
-        </div>
-        <div className="mt-8">
-          <Button href="/references" variant="secondary">
-            Toutes les références
-          </Button>
-        </div>
       </Section>
 
       <CTABanner />

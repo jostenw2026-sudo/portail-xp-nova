@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import Hero from "@/components/Hero";
 import { Section, SectionTitle, Button } from "@/components/ui";
-import { CardMetier, CardReference, EcosystemBlock } from "@/components/cards";
+import { CardMetier, EcosystemBlock } from "@/components/cards";
 import { StatsBar, ProcessTimeline, Trajectoire, Pillars, CTABanner } from "@/components/blocks";
-import { metiersEn, featuredReferencesEn } from "@/content/en";
+import { metiersEn } from "@/content/en";
 
 export const metadata: Metadata = {
   title: "Engineering & Advisory Firm",
@@ -92,24 +92,6 @@ export default function HomeEn() {
           intro="The company has existed since 2006; it draws on the track record of its promoter, an engineer since 1989."
         />
         <Trajectoire lang="en" />
-      </Section>
-
-      <Section tone="light">
-        <SectionTitle
-          eyebrow="Selected references"
-          title="Projects delivered in demanding contexts"
-          intro="Each reference states its scope of engagement — transparency is our first proof."
-        />
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {featuredReferencesEn.slice(0, 6).map((r) => (
-            <CardReference key={r.slug} r={r} lang="en" />
-          ))}
-        </div>
-        <div className="mt-8">
-          <Button href="/en/references" variant="secondary">
-            All references
-          </Button>
-        </div>
       </Section>
 
       <CTABanner lang="en" />
