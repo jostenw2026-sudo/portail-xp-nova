@@ -4,11 +4,14 @@
  * reflète ici sous ~1 minute (cache mémoire 60 s). Si Odoo n'est pas configuré
  * ou indisponible, la liste est simplement vide (la page reste fonctionnelle).
  *
- * Filtrage par site — variable d'environnement JOBS_DEPARTMENTS :
- *   liste de départements Odoo séparés par des virgules (ex. "XP-NOVA" ou
- *   "XP-NOVA,Bureau d'études"). Seules les offres de ces départements sont
- *   affichées. Non définie → toutes les offres publiées (comportement par
- *   défaut). La comparaison est insensible à la casse.
+ * Filtrage par site :
+ *   Ce site (portail XP-NOVA) n'affiche que ses offres. La clé de site vaut
+ *   "XP-NOVA" par défaut, surchargeable par la variable d'environnement
+ *   JOBS_DEPARTMENTS (liste séparée par des virgules, ex. "XP-NOVA").
+ *   Une offre est retenue si l'une des clés correspond à son DÉPARTEMENT ou à
+ *   son LIEU DE TRAVAIL dans Odoo (comparaison insensible à la casse).
+ *   Mettre JOBS_DEPARTMENTS="*" (ou une valeur vide) pour afficher toutes les
+ *   offres publiées, sans filtre.
  */
 import { odooConfigured, odooSearchRead } from "@/lib/odoo";
 
@@ -41,9 +44,11 @@ export function jobSlug(name: string, id: number): string {
   return `${base || "offre"}-${id}`;
 }
 
-/** Départements autorisés pour ce site (JOBS_DEPARTMENTS), normalisés en minuscules. */
-function allowedDepartments(): string[] {
-  return (process.env.JOBS_DEPARTMENTS || "")
+/** Clé(s) de site (JOBS_DEPARTMENTS), normalisées en minuscules. Défaut : "XP-NOVA". */
+const DEFAULT_SITE_KEYS = "XP-NOVA";
+function siteKeys(): string[] {
+  const raw = process.env.JOBS_DEPARTMENTS ?? DEFAULT_SITE_KEYS;
+  return raw
     .split(",")
     .map((s) => s.trim().toLowerCase())
     .filter(Boolean);
@@ -76,9 +81,14 @@ export async function getPublishedJobs(): Promise<Job[]> {
         positions: typeof r.no_of_recruitment === "number" ? r.no_of_recruitment : undefined,
       };
     });
-    const allowed = allowedDepartments();
-    if (allowed.length) {
-      jobs = jobs.filter((j) => j.department && allowed.includes(j.department.toLowerCase()));
+    const keys = siteKeys();
+    const showAll = keys.length === 0 || keys.includes("*") || keys.includes("all");
+    if (!showAll) {
+      jobs = jobs.filter((j) =>
+        [j.department, j.location]
+          .filter((v): v is string => Boolean(v))
+          .some((v) => keys.includes(v.toLowerCase())),
+      );
     }
     cache = { data: jobs, ts: Date.now() };
     return jobs;
