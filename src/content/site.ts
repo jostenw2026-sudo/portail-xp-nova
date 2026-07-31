@@ -56,6 +56,7 @@ export const nav = [
   { label: "Références", href: "/references" },
   { label: "Équipe", href: "/equipe" },
   { label: "Ressources", href: "/ressources" },
+  { label: "Carrières", href: "/carrieres" },
 ] as const;
 
 // CTA canoniques — charte §6.1

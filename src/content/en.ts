@@ -34,6 +34,7 @@ export const navEn = [
   { label: "References", href: "/en/references" },
   { label: "Team", href: "/en/equipe" },
   { label: "Resources", href: "/en/ressources" },
+  { label: "Careers", href: "/en/carrieres" },
 ] as const;
 
 export const ctaEn = {
