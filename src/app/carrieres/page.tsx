@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Careers from "@/components/Careers";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Carrières",
   description:

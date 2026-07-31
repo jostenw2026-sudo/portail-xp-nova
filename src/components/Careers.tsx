@@ -1,6 +1,7 @@
 import { PageHero, Breadcrumbs, CTABanner } from "@/components/blocks";
 import { Section, SectionTitle, Callout } from "@/components/ui";
-import CareersForm from "@/components/CareersForm";
+import CareersApply from "@/components/CareersApply";
+import { getPublishedJobs } from "@/lib/jobs";
 
 // Page Carrières XP-NOVA — corps bilingue partagé par /carrieres et /en/carrieres.
 // S'inspire de la page Carrières d'agrovita, adaptée au Bureau d'Ingénierie Conseil
@@ -149,8 +150,9 @@ const CONTENT = {
   },
 } as const;
 
-export default function Careers({ lang = "fr" }: { lang?: Lang }) {
+export default async function Careers({ lang = "fr" }: { lang?: Lang }) {
   const c = CONTENT[lang];
+  const offers = await getPublishedJobs();
   return (
     <>
       <PageHero eyebrow={c.hero.eyebrow} title={c.hero.title} lead={c.hero.lead} />
@@ -198,35 +200,17 @@ export default function Careers({ lang = "fr" }: { lang?: Lang }) {
 
       <Section id="candidature">
         <SectionTitle eyebrow={c.postesEyebrow} title={c.postesTitle} intro={c.postesIntro} />
-        <div className="grid gap-8 lg:grid-cols-[1fr_1fr]">
-          <div className="rounded-lg border border-line bg-paper p-6">
-            <p className="eyebrow mb-3">{c.postesLabel}</p>
-            <ul className="space-y-2">
-              {c.postes.map((p) => (
-                <li key={p} className="flex gap-2 text-ink/90">
-                  <span className="text-gold">▹</span>
-                  <span>{p}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="rounded-lg border border-line bg-light p-6">
-            <p className="eyebrow mb-3">{c.vivierLabel}</p>
-            <ul className="space-y-2">
-              {c.vivier.map((p) => (
-                <li key={p} className="flex gap-2 text-ink/90">
-                  <span className="text-gold">▹</span>
-                  <span>{p}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-
-        <div className="mt-12">
-          <SectionTitle eyebrow={c.formEyebrow} title={c.formTitle} intro={c.formIntro} />
-          <CareersForm roles={[...c.roles]} lang={lang} />
-        </div>
+        <CareersApply
+          offers={offers}
+          roles={[...c.roles]}
+          postes={[...c.postes]}
+          vivier={[...c.vivier]}
+          postesLabel={c.postesLabel}
+          vivierLabel={c.vivierLabel}
+          formTitle={c.formTitle}
+          formIntro={c.formIntro}
+          lang={lang}
+        />
       </Section>
 
       <CTABanner lang={lang} />

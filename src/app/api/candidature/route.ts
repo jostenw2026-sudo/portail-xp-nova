@@ -34,6 +34,9 @@ export async function POST(req: Request) {
 
     // Pièces jointes (CV, diplômes…)
     const files = form.getAll("documents").filter((f): f is File => f instanceof File && f.size > 0);
+    if (files.length === 0) {
+      return NextResponse.json({ error: "Au moins un document (CV) est requis." }, { status: 400 });
+    }
     if (files.length > MAX_FILES) {
       return NextResponse.json({ error: `Trop de fichiers (max ${MAX_FILES}).` }, { status: 400 });
     }
