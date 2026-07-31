@@ -19,7 +19,7 @@ export default function Hero({ lang = "fr" }: { lang?: "fr" | "en" }) {
         }}
       />
       <HeroBlueprint className="pointer-events-none absolute -right-20 -top-12 h-[540px] w-[540px] md:right-0" />
-      <div className="container-x relative py-20 md:py-28">
+      <div className="container-x relative py-16 md:py-24">
         <p className="eyebrow mb-4">{en ? siteEn.baseline : site.baseline}</p>
         {en ? (
           <h1 className="title-hero max-w-4xl !text-white">
@@ -49,7 +49,7 @@ export default function Hero({ lang = "fr" }: { lang?: "fr" | "en" }) {
         </div>
 
         {/* Devise */}
-        <p className="mt-14 text-gold font-display text-lg tracking-wide">
+        <p className="mt-10 text-gold font-display text-lg tracking-wide">
           « {en ? siteEn.devise : site.devise} »
         </p>
       </div>

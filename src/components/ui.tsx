@@ -23,7 +23,7 @@ export function Section({
         ? "bg-light text-ink"
         : "bg-paper text-ink";
   return (
-    <section id={id} className={`${bg} py-16 md:py-24`}>
+    <section id={id} className={`${bg} py-12 md:py-16`}>
       <div className="container-x">{children}</div>
     </section>
   );
@@ -67,7 +67,7 @@ export function SectionTitle({
   tone?: "dark" | "light";
 }) {
   return (
-    <div className="mb-10 flex max-w-3xl flex-col gap-4">
+    <div className="mb-8 flex max-w-3xl flex-col gap-3">
       {eyebrow && <Eyebrow>{eyebrow}</Eyebrow>}
       <h2 className={`title-1 gold-rule ${tone === "light" ? "!text-white" : ""}`}>{title}</h2>
       {intro && (

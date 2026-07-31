@@ -13,7 +13,7 @@ export function StatsBar({ tone = "navy", lang = "fr" }: { tone?: "navy" | "ligh
   const stats = lang === "en" ? siteEn.proofStats : site.proofStats;
   return (
     <div className={dark ? "bg-navy text-white" : "bg-light text-ink"}>
-      <div className="container-x grid grid-cols-2 gap-8 py-12 md:grid-cols-4">
+      <div className="container-x grid grid-cols-2 gap-8 py-10 md:grid-cols-4">
         {stats.map((s) => (
           <div key={s.label} className="text-center">
             <div className="font-display text-4xl font-extrabold text-gold">{s.value}</div>
@@ -146,7 +146,7 @@ export function CTABanner({ lang = "fr" }: { lang?: Lang }) {
   const CTA = en ? ctaEn : cta;
   return (
     <div className="bg-navy">
-      <div className="container-x py-16 text-center">
+      <div className="container-x py-14 text-center">
         <h2 className="title-1 !text-white">{en ? "Let's discuss your project" : "Parlons de votre projet"}</h2>
         <p className="mx-auto mt-4 max-w-2xl text-white/80 text-lg">
           {en
@@ -204,7 +204,7 @@ export function PageHero({
   return (
     <section className="relative overflow-hidden bg-navy text-white">
       <HeroBlueprint className="pointer-events-none absolute -right-24 -top-16 h-[420px] w-[420px] opacity-80" />
-      <div className="container-x relative flex flex-col gap-4 py-14 md:py-20">
+      <div className="container-x relative flex flex-col gap-4 py-12 md:py-16">
         <p className="eyebrow">{eyebrow}</p>
         <h1 className="title-1 !text-white gold-rule">{title}</h1>
         {lead && <p className="max-w-2xl text-lg text-white/80">{lead}</p>}
