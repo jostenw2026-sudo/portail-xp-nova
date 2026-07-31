@@ -1,11 +1,13 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import type { Job } from "@/lib/jobs";
 
-// Moteur d'offres + candidature. Affiche les offres publiées (Odoo), permet de
-// postuler à une offre précise (pré-sélection), et gère l'envoi multipart avec
-// pièces jointes obligatoires (CV requis).
+// Moteur d'offres + candidature. Affiche les offres publiées (Odoo), renvoie
+// vers la fiche dédiée de chaque offre, permet de postuler à une offre précise
+// (pré-sélection, y compris via ?poste= dans l'URL) et gère l'envoi multipart
+// avec pièces jointes obligatoires (CV requis).
 
 const MAX_FILES = 6;
 const MAX_TOTAL = 15 * 1024 * 1024; // 15 Mo
@@ -26,6 +28,7 @@ export default function CareersApply({
   offers, roles, postes, vivier, postesLabel, vivierLabel, formTitle, formIntro, lang = "fr",
 }: Props) {
   const en = lang === "en";
+  const base = en ? "/en/carrieres" : "/carrieres";
   const [status, setStatus] = useState<"idle" | "sending" | "ok" | "error">("idle");
   const [errMsg, setErrMsg] = useState("");
   const [poste, setPoste] = useState("");
@@ -33,7 +36,7 @@ export default function CareersApply({
 
   const T = en
     ? {
-        offresTitle: "Open positions", postesUnit: "position(s)", applyTo: "Apply to this position",
+        offresTitle: "Open positions", postesUnit: "position(s)", applyTo: "Apply to this position", details: "View position",
         noOffers: "No open position is published right now — you are welcome to send a spontaneous application below.",
         nom: "Full name *", email: "Professional email *", tel: "Phone",
         posteLabel: "Position", profil: "Current role / specialisation",
@@ -51,7 +54,7 @@ export default function CareersApply({
         note: "Your data and documents are used solely to process your application.",
       }
     : {
-        offresTitle: "Offres en cours", postesUnit: "poste(s)", applyTo: "Postuler à ce poste",
+        offresTitle: "Offres en cours", postesUnit: "poste(s)", applyTo: "Postuler à ce poste", details: "Voir l'offre",
         noOffers: "Aucune offre ouverte n'est publiée pour le moment — vous pouvez envoyer une candidature spontanée ci-dessous.",
         nom: "Nom complet *", email: "E-mail professionnel *", tel: "Téléphone",
         posteLabel: "Poste visé", profil: "Poste actuel / spécialité",
@@ -70,6 +73,16 @@ export default function CareersApply({
       };
 
   const roleOptions = Array.from(new Set([...offers.map((o) => o.name), ...roles]));
+
+  // Pré-sélection d'un poste passé dans l'URL (ex. depuis une fiche d'offre :
+  // /carrieres?poste=Ingénieur…#candidature) puis défilement vers le formulaire.
+  useEffect(() => {
+    const p = new URLSearchParams(window.location.search).get("poste");
+    if (p) {
+      setPoste(p);
+      formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, []);
 
   function applyTo(name: string) {
     setPoste(name);
@@ -130,16 +143,23 @@ export default function CareersApply({
           <div className="mt-6 grid gap-5 md:grid-cols-2">
             {offers.map((o) => (
               <div key={o.id} className="flex flex-col rounded-lg border border-line bg-paper p-6">
-                <h4 className="title-3 text-navy">{o.name}</h4>
+                <h4 className="title-3 text-navy">
+                  <Link href={`${base}/${o.slug}`} className="no-underline hover:text-royal">{o.name}</Link>
+                </h4>
                 {meta(o) ? <p className="mt-1 text-xs font-semibold uppercase tracking-wide text-gold">{meta(o)}</p> : null}
                 {o.description ? <p className="mt-2 text-sm text-grey">{teaser(o.description)}</p> : null}
-                <button
-                  type="button"
-                  onClick={() => applyTo(o.name)}
-                  className="mt-4 self-start rounded-md bg-navy px-4 py-2 text-sm font-semibold text-white hover:bg-royal"
-                >
-                  {T.applyTo}
-                </button>
+                <div className="mt-4 flex flex-wrap items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => applyTo(o.name)}
+                    className="rounded-md bg-navy px-4 py-2 text-sm font-semibold text-white hover:bg-royal"
+                  >
+                    {T.applyTo}
+                  </button>
+                  <Link href={`${base}/${o.slug}`} className="text-sm font-semibold text-royal no-underline hover:underline">
+                    {T.details} →
+                  </Link>
+                </div>
               </div>
             ))}
           </div>
@@ -196,6 +216,9 @@ export default function CareersApply({
               <select id="poste" name="poste" className={field} value={poste} onChange={(e) => setPoste(e.target.value)}>
                 <option value="">{T.select}</option>
                 {roleOptions.map((r) => <option key={r} value={r}>{r}</option>)}
+                {poste && !roleOptions.includes(poste) && poste !== T.spontanee ? (
+                  <option value={poste}>{poste}</option>
+                ) : null}
                 <option value={T.spontanee}>{T.spontanee}</option>
               </select>
             </div>
