@@ -28,11 +28,10 @@ export function CardMetier({ m, lang = "fr" }: { m: Metier; lang?: Lang }) {
 }
 
 export function CardReference({ r, lang = "fr" }: { r: Reference; lang?: Lang }) {
+  // Vitrine sans munition concurrentielle : ni donneur d'ordre, ni détail de mission.
+  // Le détail (maître d'ouvrage, rôle, cadre, pièces) est fourni sur demande.
   return (
-    <Link
-      href={p(lang, `/references/${r.slug}`)}
-      className="group flex flex-col rounded-lg border border-line bg-paper overflow-hidden no-underline transition-shadow hover:shadow-lg"
-    >
+    <div className="flex flex-col rounded-lg border border-line bg-paper overflow-hidden">
       <div className="relative overflow-hidden bg-navy text-white p-5">
         <RefIllustration
           category={refCategory(r.slug)}
@@ -42,21 +41,15 @@ export function CardReference({ r, lang = "fr" }: { r: Reference; lang?: Lang })
           <span>{r.pays}</span>
           <span>{r.annees}</span>
         </div>
-        <h3 className="relative mt-2 font-display text-lg leading-snug text-white group-hover:text-gold-soft">
-          {r.title}
-        </h3>
+        <h3 className="relative mt-2 font-display text-lg leading-snug text-white">{r.title}</h3>
       </div>
       <div className="p-5 flex-1 flex flex-col">
         <p className="text-sm text-grey">{r.typeMission}</p>
-        <p className="mt-1 text-sm text-ink/80">
-          <span className="font-semibold">{lang === "en" ? "Contracting authority:" : "Donneur d'ordre :"}</span>{" "}
-          {r.client}
+        <p className="mt-auto pt-4 text-xs text-grey">
+          {lang === "en" ? "Details on request" : "Détails sur demande"}
         </p>
-        <span className="mt-auto pt-4 text-royal font-semibold">
-          {lang === "en" ? "View reference →" : "Voir la référence →"}
-        </span>
       </div>
-    </Link>
+    </div>
   );
 }
 

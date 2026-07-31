@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { PageHero, Breadcrumbs, CTABanner } from "@/components/blocks";
-import { Section } from "@/components/ui";
+import { Section, Callout, Button } from "@/components/ui";
 import { JsonLd, breadcrumbLd } from "@/components/JsonLd";
 import ReferencesList from "./ReferencesList";
 
@@ -17,12 +17,24 @@ export default function ReferencesPage() {
       <PageHero
         eyebrow="Références"
         title="Des projets réalisés dans des contextes variés"
-        lead="Chaque fiche précise son cadre d'intervention : qui a contracté, dans quel rôle, avec quels résultats. La transparence est notre première preuve."
+        lead="Un aperçu des projets sur lesquels nos experts sont intervenus — secteurs, pays et périodes. Le détail de chaque mission (maître d'ouvrage, rôle, cadre d'intervention, pièces justificatives) est communiqué sur demande."
       />
       <Breadcrumbs items={[{ label: "Références" }]} />
       <JsonLd data={breadcrumbLd([{ label: "Références", href: "/references" }])} />
       <Section>
         <ReferencesList />
+        <Callout title="Dossier de références détaillé — sur demande" variant="gold">
+          <p>
+            Pour chaque projet : maître d&apos;ouvrage, rôle exact, cadre d&apos;intervention,
+            attestations et CV au format bailleur. Transmis aux partenaires et maîtres d&apos;ouvrage
+            qualifiés, après instruction de la demande.
+          </p>
+          <div className="mt-4">
+            <Button href="/contact" variant="secondary">
+              Demander le dossier détaillé
+            </Button>
+          </div>
+        </Callout>
       </Section>
       <CTABanner />
     </>

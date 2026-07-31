@@ -1,44 +1,42 @@
 import type { Metadata } from "next";
 import { PageHero, Breadcrumbs, CTABanner } from "@/components/blocks";
-import { Section, SectionTitle, Callout } from "@/components/ui";
-import { CardExpert } from "@/components/cards";
-import { expertsByCategoryEn } from "@/content/en";
+import { Section, Callout, Button } from "@/components/ui";
+import Organigramme from "@/components/Organigramme";
 
 export const metadata: Metadata = {
-  title: "Our experts",
+  title: "Organisation & team",
   description:
-    "A multidisciplinary team and a network of mobilisable experts, with CVs compliant with development-partner standards.",
+    "XP-NOVA's organisation: management, permanent core and a network of mobilisable associate experts. Detailed profiles and donor-format CVs on request.",
   alternates: { canonical: "/en/equipe", languages: { fr: "/equipe", en: "/en/equipe" } },
 };
 
 export default function EquipePageEn() {
-  const groups = expertsByCategoryEn();
   return (
     <>
       <PageHero
-        eyebrow="Team"
-        title="Expertise that embodies the method"
-        lead="A permanent core and a network of mobilisable experts, with profiles compliant with development-partner standards."
+        eyebrow="Organisation"
+        title="One organisation, a network of experts"
+        lead="A permanent core and a network of mobilisable associate experts, with profiles compliant with development-partner standards. Detailed CVs are shared on request."
       />
       <Breadcrumbs items={[{ label: "Team" }]} lang="en" />
 
-      {groups.map((g) => (
-        <Section key={g.category} tone={g.category === "Direction" ? "paper" : "light"}>
-          <SectionTitle eyebrow={g.label} title={g.label} />
-          <div className="grid gap-6 lg:grid-cols-2">
-            {g.items.map((e) => (
-              <CardExpert key={e.slug} e={e} lang="en" />
-            ))}
-          </div>
-        </Section>
-      ))}
-
       <Section>
-        <Callout title="Mobilisation capacity" variant="gold">
-          Beyond its permanent core, XP-NOVA mobilises associate experts and the contracted capacities
-          of its associates and third parties, through written commitment — to respond in consortium
-          as in direct bids, to the requirements of procurement procedures. Full CVs in donor format
-          are shared on request.
+        <Organigramme lang="en" />
+      </Section>
+
+      <Section tone="light">
+        <Callout title="Profiles & CVs — on request" variant="gold">
+          <p>
+            Beyond its permanent core, XP-NOVA mobilises associate experts and the contracted
+            capacities of its associates and third parties, through written commitment — to respond in
+            consortium as in direct bids. Full CVs in donor format are shared on request, as part of a
+            consultation or tender.
+          </p>
+          <div className="mt-4">
+            <Button href="/en/contact" variant="secondary">
+              Request the profiles
+            </Button>
+          </div>
         </Callout>
       </Section>
 

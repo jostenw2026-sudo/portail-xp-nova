@@ -1,7 +1,6 @@
 import type { MetadataRoute } from "next";
 import { site } from "@/content/site";
 import { metiers } from "@/content/metiers";
-import { references } from "@/content/references";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = site.url;
@@ -33,9 +32,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${base}/metiers/${m.slug}`, lastModified: now, changeFrequency: "monthly" as const, priority: 0.7 },
     { url: `${base}/en/metiers/${m.slug}`, lastModified: now, changeFrequency: "monthly" as const, priority: 0.6 },
   ]);
-  const refPages = references.flatMap((r) => [
-    { url: `${base}/references/${r.slug}`, lastModified: now, changeFrequency: "yearly" as const, priority: 0.6 },
-    { url: `${base}/en/references/${r.slug}`, lastModified: now, changeFrequency: "yearly" as const, priority: 0.5 },
-  ]);
-  return [...frStatic, ...enStatic, ...metierPages, ...refPages];
+  return [...frStatic, ...enStatic, ...metierPages];
 }
