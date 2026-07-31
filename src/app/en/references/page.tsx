@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { PageHero, Breadcrumbs, CTABanner } from "@/components/blocks";
 import { Section, Callout, Button } from "@/components/ui";
-import ReferencesListEn from "./ReferencesList";
+import ReferencesSummary from "@/components/ReferencesSummary";
 
 export const metadata: Metadata = {
   title: "Project references",
@@ -20,7 +20,7 @@ export default function ReferencesPageEn() {
       />
       <Breadcrumbs items={[{ label: "References" }]} lang="en" />
       <Section>
-        <ReferencesListEn />
+        <ReferencesSummary lang="en" />
         <Callout title="Detailed reference dossier — on request" variant="gold">
           <p>
             For each project: contracting authority, exact role, scope of engagement, certificates

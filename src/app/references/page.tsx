@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { PageHero, Breadcrumbs, CTABanner } from "@/components/blocks";
 import { Section, Callout, Button } from "@/components/ui";
 import { JsonLd, breadcrumbLd } from "@/components/JsonLd";
-import ReferencesList from "./ReferencesList";
+import ReferencesSummary from "@/components/ReferencesSummary";
 
 export const metadata: Metadata = {
   title: "Références projets",
@@ -22,7 +22,7 @@ export default function ReferencesPage() {
       <Breadcrumbs items={[{ label: "Références" }]} />
       <JsonLd data={breadcrumbLd([{ label: "Références", href: "/references" }])} />
       <Section>
-        <ReferencesList />
+        <ReferencesSummary lang="fr" />
         <Callout title="Dossier de références détaillé — sur demande" variant="gold">
           <p>
             Pour chaque projet : maître d&apos;ouvrage, rôle exact, cadre d&apos;intervention,

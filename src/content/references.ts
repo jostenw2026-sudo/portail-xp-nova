@@ -240,3 +240,33 @@ export const featuredReferences = references.filter((r) => r.featured);
 
 export const referencePays = [...new Set(references.map((r) => r.pays))].sort();
 export const referenceTypes = [...new Set(references.map((r) => r.typeMission))].sort();
+
+// ─── Agrégats publics (vitrine sans intitulés de projets ni donneurs d'ordre) ───
+// Catégorie de secteur déduite du slug (même logique que refCategory, mais
+// server-safe : dupliquée ici pour éviter d'importer un module d'illustrations).
+function categoryOf(slug: string): string {
+  const s = slug.toLowerCase();
+  if (s.includes("barrage") || s.includes("kikot")) return "energie";
+  if (s.includes("olembe") || s.includes("stade") || s.includes("omnisport")) return "stade";
+  if (s.includes("aeroport")) return "aeroport";
+  if (s.includes("adduction") || s.includes("eau")) return "eau";
+  if (s.includes("ecole") || s.includes("normale") || s.includes("campus") || s.includes("universit")) return "campus";
+  if (s.includes("sonara") || s.includes("usine") || s.includes("industri")) return "industrie";
+  if (s.includes("audit") || s.includes("bip")) return "audit";
+  if (s.includes("reseau")) return "reseaux";
+  return "batiment";
+}
+
+const _years = references.flatMap((r) => (r.annees.match(/\d{4}/g) ?? []).map(Number));
+
+export const referenceSummary = {
+  total: references.length,
+  pays: referencePays,
+  anneeMin: Math.min(..._years),
+  anneeMax: Math.max(..._years),
+  parSecteur: references.reduce<Record<string, number>>((acc, r) => {
+    const c = categoryOf(r.slug);
+    acc[c] = (acc[c] ?? 0) + 1;
+    return acc;
+  }, {}),
+};
