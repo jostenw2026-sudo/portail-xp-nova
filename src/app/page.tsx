@@ -3,6 +3,7 @@ import { Section, SectionTitle, Button } from "@/components/ui";
 import { CardMetier, EcosystemBlock } from "@/components/cards";
 import { StatsBar, ProcessTimeline, Trajectoire, Pillars, CTABanner } from "@/components/blocks";
 import { metiers } from "@/content/metiers";
+import VideoPresentation from "@/components/VideoPresentation";
 
 // Audiences institutionnelles servies par ODT (issues du support « Institutions »).
 const AUDIENCES = [
@@ -19,6 +20,8 @@ export default function Home() {
     <>
       <Hero />
       <StatsBar tone="light" />
+
+      <VideoPresentation />
 
       <Section>
         <SectionTitle

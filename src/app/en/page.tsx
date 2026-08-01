@@ -4,6 +4,7 @@ import { Section, SectionTitle, Button } from "@/components/ui";
 import { CardMetier, EcosystemBlock } from "@/components/cards";
 import { StatsBar, ProcessTimeline, Trajectoire, Pillars, CTABanner } from "@/components/blocks";
 import { metiersEn } from "@/content/en";
+import VideoPresentation from "@/components/VideoPresentation";
 
 export const metadata: Metadata = {
   title: "Engineering & Advisory Firm",
@@ -26,6 +27,8 @@ export default function HomeEn() {
     <>
       <Hero lang="en" />
       <StatsBar tone="light" lang="en" />
+
+      <VideoPresentation lang="en" />
 
       <Section>
         <SectionTitle
