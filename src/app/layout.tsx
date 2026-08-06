@@ -1,30 +1,46 @@
 import type { Metadata } from "next";
 import Script from "next/script";
-import { portal } from "@/content/portal";
 import "./globals.css";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import { JsonLd, organizationLd } from "@/components/JsonLd";
+import { site } from "@/content/site";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(portal.url),
-  title: "XP-NOVA — Bureau d'Ingénierie Conseil | Agriculture & Territoires",
-  description:
-    "XP-NOVA, Bureau d'Ingénierie Conseil : une même ingénierie, deux domaines d'application — AGROVITA (agriculture & agro-industrie) et ODT (développement territorial). Yaoundé, Cameroun.",
-  alternates: { canonical: "/" },
+  metadataBase: new URL(site.url),
+  title: {
+    default: `${site.name} — ${site.baseline} au Cameroun`,
+    template: `%s — ${site.name}`,
+  },
+  description: site.description,
   openGraph: {
     type: "website",
-    url: portal.url,
-    title: "XP-NOVA — Bureau d'Ingénierie Conseil",
-    description: "Une même ingénierie, deux domaines d'application : AGROVITA et ODT.",
-    images: [{ url: "/brand/og-portail.svg", width: 1200, height: 630 }],
     locale: "fr_FR",
+    siteName: `${site.name} — ${site.baseline}`,
+    title: `${site.name} — ${site.baseline}`,
+    description: site.description,
+    url: site.url,
+    images: [{ url: "/brand/og-image.svg", width: 1200, height: 630 }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${site.name} — ${site.baseline}`,
+    description: site.description,
   },
   icons: { icon: "/favicon.svg" },
+  alternates: { canonical: "/", languages: { fr: "/", en: "/en" } },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="fr">
-      <body>
-        {children}
+    <html lang="fr" className="h-full">
+      <body className="min-h-full flex flex-col">
+        <JsonLd data={organizationLd} />
+        <Header />
+        <main className="flex-1">{children}</main>
+        <Footer />
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-EQ6HH543RK"
           strategy="afterInteractive"

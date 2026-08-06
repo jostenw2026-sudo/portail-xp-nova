@@ -1,12 +1,11 @@
 import { NextResponse } from "next/server";
 import { odooConfigured, odooCreate } from "@/lib/odoo";
 
-// Réception du formulaire de contact ODT → CRM Odoo (crm.lead), source-taggé.
-// Secrets ODOO_URL/ODOO_DB/ODOO_USER/ODOO_API_KEY injectés par l'environnement
-// (Coolify) ; jamais dans le dépôt. Non bloquant : si Odoo est indisponible ou
-// non configuré, la demande est tracée en log (le visiteur n'est jamais bloqué).
+// Demande d'un document "sur demande" -> CRM Odoo (crm.lead), source-taggé.
+// Même logique non bloquante que /api/contact : si Odoo est indisponible ou non
+// configuré, la demande est tracée en log (le visiteur n'est jamais bloqué).
 
-const SOURCE = "odt.xp-nova.com";
+const SOURCE = "xp-nova.com — ressources";
 
 export async function POST(req: Request) {
   try {
@@ -17,7 +16,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ ok: true });
     }
 
-    const required = ["nom", "organisation", "email", "pays", "message"];
+    const required = ["nom", "email", "pays", "document"];
     for (const f of required) {
       if (!body[f] || String(body[f]).trim() === "") {
         return NextResponse.json({ error: `Champ manquant : ${f}` }, { status: 400 });
@@ -29,11 +28,9 @@ export async function POST(req: Request) {
 
     const val = (k: string) => (body[k] ? String(body[k]).trim() : "");
     const recap = [
-      val("typeOrg") && `Type d'organisation : ${val("typeOrg")}`,
-      val("objet") && `Objet : ${val("objet")}`,
+      `Document demandé : ${val("document")}`,
+      val("organisation") && `Organisation : ${val("organisation")}`,
       val("pays") && `Pays : ${val("pays")}`,
-      val("budget") && `Budget estimatif : ${val("budget")}`,
-      val("telephone") && `Téléphone : ${val("telephone")}`,
     ]
       .filter(Boolean)
       .join("\n");
@@ -42,23 +39,22 @@ export async function POST(req: Request) {
     if (odooConfigured()) {
       try {
         const leadId = await odooCreate("crm.lead", {
-          name: `[${SOURCE}] ${val("nom")}${val("objet") ? ` — ${val("objet")}` : ""}`,
+          name: `[${SOURCE}] ${val("document")} — ${val("nom")}`,
           contact_name: val("nom"),
           email_from: val("email"),
-          ...(val("telephone") ? { phone: val("telephone") } : {}),
           ...(val("organisation") ? { partner_name: val("organisation") } : {}),
-          description: [recap, "", val("message")].filter((l) => l !== "").join("\n"),
+          description: recap,
         });
-        console.log(`[contact ODT] lead Odoo créé (id=${leadId})`);
+        console.log(`[ressources] lead Odoo créé (id=${leadId})`);
       } catch (err) {
-        console.warn(`[contact ODT] Odoo indisponible (demande tracée) : ${(err as Error).message}`);
+        console.warn(`[ressources] Odoo indisponible (demande tracée) : ${(err as Error).message}`);
       }
     } else {
-      console.warn("[contact ODT] Odoo non configuré — demande en log :", {
+      console.warn("[ressources] Odoo non configuré — demande en log :", {
         nom: val("nom"),
         email: val("email"),
         pays: val("pays"),
-        objet: val("objet"),
+        document: val("document"),
       });
     }
 

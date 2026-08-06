@@ -147,7 +147,7 @@
 
   .container-x {
     width: 100%;
-    max-width: 1200px;
+    max-width: 1320px;
     margin-inline: auto;
     padding-inline: clamp(1.1rem, 0.5rem + 2vw, 2.5rem);
   }

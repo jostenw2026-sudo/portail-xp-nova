@@ -1,15 +1,28 @@
 "use client";
 
 import { useState } from "react";
+import { metiers } from "@/content/metiers";
+import { metiersEn } from "@/content/en";
 
-const interets = [
-  "AGROVITA — agriculture & agro-industrie",
-  "ODT — développement territorial",
-  "Bureau d'Ingénierie Conseil (les deux)",
-  "Autre / je ne sais pas encore",
+const orgTypesFr = [
+  "Bailleur / partenaire technique et financier",
+  "Administration / agence publique",
+  "Collectivité territoriale",
+  "Entreprise privée",
+  "Bureau d'études partenaire",
+  "Autre",
+];
+const orgTypesEn = [
+  "Development partner / technical & financial partner",
+  "Government / public agency",
+  "Local authority",
+  "Private company",
+  "Partner engineering firm",
+  "Other",
 ];
 
-export default function ContactForm() {
+export default function ContactForm({ lang = "fr" }: { lang?: "fr" | "en" }) {
+  const en = lang === "en";
   const [status, setStatus] = useState<"idle" | "sending" | "ok" | "error">("idle");
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -33,61 +46,132 @@ export default function ContactForm() {
 
   if (status === "ok") {
     return (
-      <div className="rounded-lg border border-white/20 bg-white/5 p-8 text-center">
-        <p className="font-display text-xl text-white">Demande reçue.</p>
-        <p className="mt-2 text-white/80">
-          Merci. Un expert vous répond sous 48 h ouvrées à l&apos;adresse indiquée.
+      <div className="rounded-lg border border-line bg-light p-8 text-center">
+        <h3 className="title-3 text-navy">{en ? "Request received" : "Demande reçue"}</h3>
+        <p className="mt-2 text-grey">
+          {en
+            ? "Thank you. An expert will reply within 48 business hours at the address you provided."
+            : "Merci. Un expert vous répond sous 48 h ouvrées à l'adresse indiquée."}
         </p>
       </div>
     );
   }
 
-  const field =
-    "w-full rounded-md border border-white/20 bg-white/5 px-4 py-3 text-white placeholder-white/40 focus:border-gold";
+  const orgTypes = en ? orgTypesEn : orgTypesFr;
+  const items = en ? metiersEn : metiers;
+  const field = "w-full rounded-md border border-line bg-paper px-4 py-3 text-ink focus:border-royal";
+  const label = "block text-sm font-semibold text-navy mb-1";
+  const T = en
+    ? {
+        name: "Name *",
+        org: "Organisation *",
+        email: "Email *",
+        phone: "Phone",
+        country: "Country *",
+        orgType: "Organisation type",
+        select: "Select…",
+        subject: "Subject",
+        partnership: "Partnership / consortium",
+        other: "Other",
+        budget: "Estimated budget",
+        optional: "(optional)",
+        budgetPh: "E.g. to be determined",
+        project: "Your project *",
+        sending: "Sending…",
+        submit: "Send my request",
+        error: "Something went wrong. Please write to us directly at contact@xp-nova.com.",
+        privacy:
+          "Your data is used solely to handle your request. Getting in touch is free and without commitment; we scope the need before any proposal.",
+      }
+    : {
+        name: "Nom *",
+        org: "Organisation *",
+        email: "E-mail *",
+        phone: "Téléphone",
+        country: "Pays *",
+        orgType: "Type d'organisation",
+        select: "Sélectionner…",
+        subject: "Objet",
+        partnership: "Partenariat / groupement",
+        other: "Autre",
+        budget: "Budget estimatif",
+        optional: "(optionnel)",
+        budgetPh: "Ex. : à déterminer",
+        project: "Votre projet *",
+        sending: "Envoi…",
+        submit: "Envoyer ma demande",
+        error: "Une erreur est survenue. Écrivez-nous directement à contact@xp-nova.com.",
+        privacy:
+          "Vos données servent uniquement à traiter votre demande. La prise de contact est libre et sans engagement ; l'instruction du besoin précède toute proposition.",
+      };
 
   return (
-    <form onSubmit={onSubmit} className="grid gap-4 sm:grid-cols-2">
+    <form onSubmit={onSubmit} className="grid gap-5 sm:grid-cols-2">
+      {/* Honeypot anti-spam (invisible) */}
       <input type="text" name="website" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden />
-      <input name="nom" required placeholder="Nom *" className={field} aria-label="Nom" />
-      <input name="organisation" placeholder="Organisation" className={field} aria-label="Organisation" />
-      <input name="email" type="email" required placeholder="E-mail *" className={field} aria-label="E-mail" />
-      <input name="telephone" placeholder="Téléphone" className={field} aria-label="Téléphone" />
-      <input name="pays" placeholder="Pays" className={field} aria-label="Pays" />
-      <select name="interet" defaultValue="" className={field} aria-label="Domaine d'intérêt">
-        <option value="" disabled className="text-navy">
-          Votre domaine d&apos;intérêt…
-        </option>
-        {interets.map((i) => (
-          <option key={i} value={i} className="text-navy">
-            {i}
-          </option>
-        ))}
-      </select>
-      <textarea
-        name="message"
-        required
-        rows={4}
-        placeholder="Votre projet en quelques mots *"
-        className={`${field} sm:col-span-2`}
-        aria-label="Votre projet"
-      />
-      <div className="flex items-center gap-4 sm:col-span-2">
+
+      <div>
+        <label className={label} htmlFor="nom">{T.name}</label>
+        <input id="nom" name="nom" required className={field} />
+      </div>
+      <div>
+        <label className={label} htmlFor="organisation">{T.org}</label>
+        <input id="organisation" name="organisation" required className={field} />
+      </div>
+      <div>
+        <label className={label} htmlFor="email">{T.email}</label>
+        <input id="email" name="email" type="email" required className={field} />
+      </div>
+      <div>
+        <label className={label} htmlFor="telephone">{T.phone}</label>
+        <input id="telephone" name="telephone" className={field} />
+      </div>
+      <div>
+        <label className={label} htmlFor="pays">{T.country}</label>
+        <input id="pays" name="pays" required className={field} />
+      </div>
+      <div>
+        <label className={label} htmlFor="typeOrg">{T.orgType}</label>
+        <select id="typeOrg" name="typeOrg" className={field} defaultValue="">
+          <option value="" disabled>{T.select}</option>
+          {orgTypes.map((t) => (
+            <option key={t} value={t}>{t}</option>
+          ))}
+        </select>
+      </div>
+      <div className="sm:col-span-2">
+        <label className={label} htmlFor="objet">{T.subject}</label>
+        <select id="objet" name="objet" className={field} defaultValue="">
+          <option value="" disabled>{T.select}</option>
+          {items.map((m) => (
+            <option key={m.slug} value={m.title}>{m.title}</option>
+          ))}
+          <option value={T.partnership}>{T.partnership}</option>
+          <option value={T.other}>{T.other}</option>
+        </select>
+      </div>
+      <div className="sm:col-span-2">
+        <label className={label} htmlFor="budget">
+          {T.budget} <span className="font-normal text-grey">{T.optional}</span>
+        </label>
+        <input id="budget" name="budget" className={field} placeholder={T.budgetPh} />
+      </div>
+      <div className="sm:col-span-2">
+        <label className={label} htmlFor="message">{T.project}</label>
+        <textarea id="message" name="message" required rows={5} className={field} />
+      </div>
+
+      <div className="sm:col-span-2 flex items-center gap-4">
         <button
           type="submit"
           disabled={status === "sending"}
           className="rounded-md bg-gold px-6 py-3 font-semibold text-navy hover:bg-gold-soft disabled:opacity-60"
         >
-          {status === "sending" ? "Envoi…" : "Envoyer ma demande"}
+          {status === "sending" ? T.sending : T.submit}
         </button>
-        {status === "error" && (
-          <p className="text-sm text-gold-soft">
-            Une erreur est survenue. Écrivez-nous à contact@xp-nova.com.
-          </p>
-        )}
+        {status === "error" && <p className="text-sm text-red-600">{T.error}</p>}
       </div>
-      <p className="text-xs text-white/50 sm:col-span-2">
-        Vos données servent uniquement à traiter votre demande. Prise de contact libre et sans engagement.
-      </p>
+      <p className="sm:col-span-2 text-xs text-grey">{T.privacy}</p>
     </form>
   );
 }
