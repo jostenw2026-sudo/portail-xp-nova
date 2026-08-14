@@ -6,9 +6,10 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { portalConfig } from "@/lib/portal/config";
+import { externalUrl } from "@/lib/portal/http";
 
 function handle(request: NextRequest) {
-  const res = NextResponse.redirect(new URL("/", request.nextUrl));
+  const res = NextResponse.redirect(externalUrl(request, "/"));
   res.cookies.set(portalConfig.sessionCookieName, "", { path: "/", maxAge: 0 });
   return res;
 }
