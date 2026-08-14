@@ -30,6 +30,12 @@ sudo chmod 700 /opt/authentik-backups/*.sh
 # Renseigner le nom exact du conteneur PostgreSQL Authentik :
 docker ps --format '{{.Names}}' | grep '^postgresql-'
 #   -> éditer PG_CONTAINER dans authentik-backup.sh (et restore) si différent
+
+# IMPORTANT : Coolify génère un utilisateur/base PostgreSQL propres à la ressource.
+# Récupérer les vrais noms (n'affiche PAS le mot de passe) et les reporter dans
+# PG_USER / PG_DB des scripts :
+docker exec <PG_CONTAINER> env | grep -E '^POSTGRES_(USER|DB)='
+#   -> PG_USER = valeur de POSTGRES_USER ; PG_DB = valeur de POSTGRES_DB
 ```
 
 Planification (cron root, tous les jours à 02h30) :
