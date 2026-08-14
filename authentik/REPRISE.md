@@ -16,11 +16,16 @@ Détails complets dans les autres fichiers du dossier `authentik/`.
 
 ---
 
-## 🔴 PRIORITÉ 1 — Terminer le SSO Odoo (flux Authorization Code)
+## ✅ PRIORITÉ 1 — SSO Odoo (flux Authorization Code) — **TERMINÉ (14/08/2026)**
 
-**Pourquoi** : le module natif `auth_oauth` (flux implicite) est rejeté par Authentik
-(`unsupported_response_type`). Solution = module `auth_oidc` (flux code). Dispo confirmée :
-OCA server-auth **19.0**, `auth_oidc` **19.0.1.0.0**.
+Le SSO Odoo ⇆ Authentik est **fonctionnel** : connexion à `https://erp.xp-nova.com` via
+« Se connecter avec XP-NOVA » (OpenID Connect, flux Authorization Code, module `auth_oidc`
+19.0.1.0.0 + `python-jose`). Le log Odoo montre le retour `?code=...` puis un 303 vers `/web`
+sans erreur. Utilisateur `josten@xp-nova.com` connecté via Authentik.
+
+*Historique du blocage (résolu)* : le module natif `auth_oauth` (flux implicite
+`response_type=token`) était rejeté par Authentik (`unsupported_response_type`). Résolu en
+passant au flux code via `auth_oidc`.
 
 **Fenêtre de maintenance courte** (redémarrage Odoo). Procédure exacte dans
 `INTEGRATION-ODOO-OIDC.md` §3 (B1→B7). Résumé :
@@ -91,7 +96,7 @@ cette mission.
 | 4 | Init (admin, XPN-ADMINS, break-glass) | ✅ ; **MFA à finaliser** (Priorité 2) |
 | 5 | Sauvegardes & exploitation (quotidienne, rétention, docs) | ✅ ; hors-VPS optionnel |
 | — | Livrable `INSTALLATION-XPNOVA.md` | ✅ |
-| — | Intégration OIDC Odoo (prévue « plus tard ») | 🔴 **1 étape restante** (Priorité 1) |
+| — | Intégration OIDC Odoo (prévue « plus tard ») | ✅ **Fonctionnel** (auth_oidc, flux code) |
 
 **Cœur de la mission (SSO/MFA/IAM pour XP-NOVA) : atteint et opérationnel.**
-Restent 2 finitions (SSO Odoo via code flow, MFA) — encadrées ci-dessus, ~20–30 min au total.
+SSO Odoo ✅ fonctionnel. Reste **1 finition** : MFA (Priorité 2).
