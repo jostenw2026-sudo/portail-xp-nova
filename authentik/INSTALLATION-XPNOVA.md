@@ -95,9 +95,12 @@ Déployé en **production** via **Coolify** sur le VPS Hostinger.
 - Compte admin principal : `akadmin` (créé via `/if/flow/initial-setup/`).
 - Groupe admin : **`XPN-ADMINS`** (superuser).
 - Compte de secours (break-glass) : **`xpn-breakglass`** (membre de `XPN-ADMINS`).
-- MFA : TOTP + Passkey/WebAuthn + codes de récupération (stockés **hors VPS**).
-- ⚠️ Le MFA **n'est pas** rendu obligatoire globalement tant que les deux comptes admin
-  n'ont pas été testés avec succès.
+- MFA : TOTP + Passkey/WebAuthn + codes de récupération (stockés **hors VPS**) sur les 2 comptes.
+- ✅ **MFA obligatoire global ACTIF** : stage `default-authentication-mfa-validation`
+  → *Not configured action = Force the user to configure an authenticator*. Activé après
+  vérification que `akadmin` et `xpn-breakglass` disposent d'un TOTP + codes de secours
+  (aucun risque de verrouillage), et connexions testées. Tout nouvel utilisateur devra
+  enrôler un facteur à sa première connexion.
 
 ## 8. Sauvegarde / restauration
 
@@ -107,9 +110,13 @@ Voir `authentik/OPERATIONS.md` (procédures détaillées, rétention 7/4/3).
 
 Voir `authentik/OPERATIONS.md` (toujours **sauvegarder avant** de mettre à jour).
 
-## 10. Étapes prévues plus tard — intégration OpenID Connect
+## 10. Intégration OpenID Connect
 
-Objectif : connecter Odoo puis le futur portail clients/experts/fournisseurs à Authentik.
+✅ **Odoo 19 Enterprise (`erp.xp-nova.com`) est déjà intégré** en OpenID Connect
+(flux Authorization Code, module OCA `auth_oidc`) — voir `INTEGRATION-ODOO-OIDC.md`.
+Le schéma ci-dessous reste la trame pour le **futur portail** clients/experts/fournisseurs.
+
+Objectif : connecter le futur portail clients/experts/fournisseurs à Authentik.
 
 1. Dans Authentik : **Applications → Providers → Create → OAuth2/OpenID Provider**
    (un provider par application : Odoo, portail, etc.).

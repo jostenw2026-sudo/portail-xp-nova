@@ -49,12 +49,14 @@ ajouter le **Client Secret** (Authentik), JWKS `…/application/o/odoo/jwks/`, T
 
 ---
 
-## ✅ PRIORITÉ 2 — MFA Authentik (Phase 4) — TOTP EN PLACE (14/08/2026)
+## ✅ PRIORITÉ 2 — MFA Authentik (Phase 4) — OBLIGATOIRE & ACTIF (14/08/2026)
 
-MFA **TOTP activé et testé** sur les comptes admin. **Obligation MFA globale : différée**
-par choix (à activer plus tard, idéalement avant de brancher le portail clients/experts).
-À vérifier/compléter le cas échéant : codes de récupération stockés hors VPS + TOTP sur
-`xpn-breakglass` (compte de secours). Procédure ci-dessous conservée pour référence.
+MFA **TOTP activé et testé** sur les comptes admin, PUIS **MFA rendu obligatoire globalement**
+(stage `default-authentication-mfa-validation` → *Not configured action = Force the user to
+configure an authenticator*). Vérifié avant activation : `akadmin` (TOTP×2, codes×2, passkey×3)
+et `xpn-breakglass` (TOTP×1, codes×1, passkey×1) → aucun risque de verrouillage. Connexions
+testées OK (akadmin + xpn-breakglass) en navigation privée. Codes de récupération à conserver
+**hors VPS**. Procédure d'enrôlement ci-dessous conservée pour les futurs utilisateurs.
 
 Dans le navigateur, sur **chaque** compte (`akadmin` puis `xpn-breakglass`) —
 `https://auth.xp-nova.com/if/user/#/settings` → **MFA Devices** :
@@ -104,5 +106,6 @@ cette mission.
 | — | Intégration OIDC Odoo (prévue « plus tard ») | ✅ **Fonctionnel** (auth_oidc, flux code) |
 
 **Cœur de la mission (SSO/MFA/IAM pour XP-NOVA) : atteint et opérationnel.**
-SSO Odoo ✅ fonctionnel · MFA TOTP ✅ en place. Restent seulement des points **optionnels**
-(obligation MFA globale, sauvegarde hors-VPS) et un point **hors mission** (websocket Odoo).
+SSO Odoo ✅ fonctionnel · MFA TOTP ✅ · **MFA obligatoire global ✅ actif**. Restent seulement
+des points **optionnels** (sauvegarde chiffrée hors-VPS) et un point **hors mission**
+(websocket Odoo port 4519).
