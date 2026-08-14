@@ -26,6 +26,12 @@ export default function Header() {
             {site.email}
           </a>
           <Link
+            href="/portail"
+            className="font-semibold text-white/80 no-underline hover:text-gold"
+          >
+            {en ? "Portal" : "Portail"}
+          </Link>
+          <Link
             href={switchTarget}
             className="rounded border border-white/30 px-2 py-0.5 text-xs font-bold text-white no-underline hover:border-gold hover:text-gold"
             aria-label={en ? "Version française" : "English version"}

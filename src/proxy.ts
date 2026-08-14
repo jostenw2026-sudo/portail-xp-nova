@@ -1,28 +1,35 @@
-import { NextRequest, NextResponse } from "next/server";
+/**
+ * Proxy (ex-middleware, Next.js 16) — protection optimiste des routes du portail.
+ * Vérifie uniquement la PRÉSENCE du cookie de session (contrôle rapide). La
+ * vérification cryptographique réelle est faite dans le DAL (`verifySession`)
+ * au niveau des pages/handlers, au plus près de la donnée.
+ */
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
-// Protection du chantier (bingeco.xp-nova.com) par Basic Auth.
-// Activée seulement si CHANTIER_PROTECT === "on" (désactivée sur localhost par défaut).
-// À la mise en production sur xp-nova.com : ne pas activer.
+const SESSION_COOKIE = "xpn_portal_session";
 
-const USER = process.env.CHANTIER_USER ?? "xpnova";
-const PASS = process.env.CHANTIER_PASS ?? "";
-const PROTECT = process.env.CHANTIER_PROTECT === "on";
+export function proxy(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+  const hasSession = Boolean(request.cookies.get(SESSION_COOKIE)?.value);
 
-export function proxy(req: NextRequest) {
-  if (!PROTECT) return NextResponse.next();
+  const isLogin = pathname === "/portail/login";
+  const isProtected = pathname.startsWith("/portail") && !isLogin;
 
-  const auth = req.headers.get("authorization");
-  if (auth) {
-    const [, encoded] = auth.split(" ");
-    const [user, pass] = atob(encoded).split(":");
-    if (user === USER && pass === PASS) return NextResponse.next();
+  // Non connecté sur une route protégée → page de connexion
+  if (isProtected && !hasSession) {
+    const url = new URL("/portail/login", request.nextUrl);
+    return NextResponse.redirect(url);
   }
-  return new NextResponse("Accès restreint — chantier XP-NOVA", {
-    status: 401,
-    headers: { "WWW-Authenticate": 'Basic realm="XP-NOVA — chantier"' },
-  });
+
+  // Déjà connecté et sur la page de login → tableau de bord
+  if (isLogin && hasSession) {
+    return NextResponse.redirect(new URL("/portail", request.nextUrl));
+  }
+
+  return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.svg|brand|fonts).*)"],
+  matcher: ["/portail/:path*"],
 };
