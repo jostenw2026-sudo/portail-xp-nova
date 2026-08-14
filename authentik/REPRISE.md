@@ -49,7 +49,12 @@ ajouter le **Client Secret** (Authentik), JWKS `…/application/o/odoo/jwks/`, T
 
 ---
 
-## 🟠 PRIORITÉ 2 — MFA Authentik (Phase 4 du cahier des charges)
+## ✅ PRIORITÉ 2 — MFA Authentik (Phase 4) — TOTP EN PLACE (14/08/2026)
+
+MFA **TOTP activé et testé** sur les comptes admin. **Obligation MFA globale : différée**
+par choix (à activer plus tard, idéalement avant de brancher le portail clients/experts).
+À vérifier/compléter le cas échéant : codes de récupération stockés hors VPS + TOTP sur
+`xpn-breakglass` (compte de secours). Procédure ci-dessous conservée pour référence.
 
 Dans le navigateur, sur **chaque** compte (`akadmin` puis `xpn-breakglass`) —
 `https://auth.xp-nova.com/if/user/#/settings` → **MFA Devices** :
@@ -93,10 +98,11 @@ cette mission.
 | 1 | Audit sans modification | ✅ |
 | 2 | Plan et validation | ✅ (adapté Coolify) |
 | 3 | Installation Authentik (Docker, TLS, isolation, non-régression) | ✅ |
-| 4 | Init (admin, XPN-ADMINS, break-glass) | ✅ ; **MFA à finaliser** (Priorité 2) |
+| 4 | Init (admin, XPN-ADMINS, break-glass) + MFA TOTP | ✅ (obligation globale différée par choix) |
 | 5 | Sauvegardes & exploitation (quotidienne, rétention, docs) | ✅ ; hors-VPS optionnel |
 | — | Livrable `INSTALLATION-XPNOVA.md` | ✅ |
 | — | Intégration OIDC Odoo (prévue « plus tard ») | ✅ **Fonctionnel** (auth_oidc, flux code) |
 
 **Cœur de la mission (SSO/MFA/IAM pour XP-NOVA) : atteint et opérationnel.**
-SSO Odoo ✅ fonctionnel. Reste **1 finition** : MFA (Priorité 2).
+SSO Odoo ✅ fonctionnel · MFA TOTP ✅ en place. Restent seulement des points **optionnels**
+(obligation MFA globale, sauvegarde hors-VPS) et un point **hors mission** (websocket Odoo).
