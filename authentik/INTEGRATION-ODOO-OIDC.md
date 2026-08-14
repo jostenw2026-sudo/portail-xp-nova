@@ -98,28 +98,72 @@ Issuer     : https://auth.xp-nova.com/application/o/odoo/
 
 ---
 
-## 3. Voie B — module OCA `auth_oidc` (Authorization Code, avancé)
+## 3. Voie B — module OCA `auth_oidc` (Authorization Code) — **PROCÉDURE VÉRIFIÉE, requise**
 
-⚠️ **Nécessite un redémarrage d'Odoo** → planifier une courte fenêtre de maintenance
-(prévenir, sauvegarder d'abord la base Odoo — voir §6).
+> ⚠️ **C'est LA solution** : le flux implicite d'`auth_oauth` (Voie A) est rejeté par Authentik
+> avec `unsupported_response_type` (Authentik ne supporte pas `response_type=token`).
+> Le module `auth_oidc` apporte le flux **Authorization Code**, supporté par Authentik.
 
-1. Récupérer `auth_oidc` depuis **OCA `server-auth`** en **branche `19.0`**
-   (si la 19.0 n'est pas encore publiée, rester sur la Voie A en attendant).
-2. Déposer le module dans `/opt/data/odoo/local_addonsv19/` (déjà dans l'addons_path) :
-   ```bash
-   # en tant qu'utilisateur xpnova, dans /opt/data/odoo/local_addonsv19/
-   git clone --branch 19.0 --depth 1 https://github.com/OCA/server-auth.git _oca_server_auth
-   # lier uniquement le module auth_oidc (et ses dépendances) dans l'addons_path
-   ```
-3. **Sauvegarder la base** (voir §6), puis redémarrer : `sudo systemctl restart xpnova`
-4. Odoo → **Apps** → *Update Apps List* → installer **« Authentication OpenID Connect »**.
-5. **Settings → Users → OAuth Providers → Create** :
-   - Flow : **OpenID Connect (authorization code flow)**
-   - Client ID / **Client Secret** : ceux du provider Authentik (§1.a)
-   - Scope : `openid profile email`
-   - Discovery/endpoints : à partir de
-     `https://auth.xp-nova.com/application/o/odoo/.well-known/openid-configuration`
-   - JWKS : `https://auth.xp-nova.com/application/o/odoo/jwks/`
+**Disponibilité confirmée** : OCA `server-auth`, branche **19.0**, module **`auth_oidc` 19.0.1.0.0**.
+- Dépend de `auth_oauth` (déjà installé ✅).
+- Dépendance Python externe : **`python-jose`** (à installer dans le venv Odoo).
+
+⚠️ Nécessite un **redémarrage d'Odoo** → courte fenêtre de maintenance + sauvegarde préalable (§6).
+
+### Étape B1 — Installer la dépendance Python dans le venv Odoo
+```bash
+sudo -u xpnova /opt/xpnova/xpnova-venv/bin/pip install 'python-jose[cryptography]'
+```
+
+### Étape B2 — Rendre `auth_oidc` disponible dans l'addons_path
+`/opt/data/odoo/local_addonsv19` est déjà dans l'addons_path ; on y place `auth_oidc` (1 niveau) :
+```bash
+# cloner OCA server-auth 19.0 hors addons, puis lier le seul module auth_oidc
+sudo -u xpnova git clone --branch 19.0 --depth 1 \
+  https://github.com/OCA/server-auth.git /opt/data/odoo/server-auth
+sudo -u xpnova ln -s /opt/data/odoo/server-auth/auth_oidc \
+  /opt/data/odoo/local_addonsv19/auth_oidc
+ls -l /opt/data/odoo/local_addonsv19/auth_oidc   # doit pointer vers le module
+```
+
+### Étape B3 — Sauvegarder puis redémarrer
+```bash
+sudo -u postgres pg_dump -Fc xpnovadb > /root/xpnovadb-$(date +%F-%H%M).dump
+sudo systemctl restart xpnova
+```
+
+### Étape B4 — Installer le module
+Odoo → **Apps** → *Update Apps List* → rechercher **« OpenID Connect »** → installer
+**`auth_oidc`** (« Authentication OpenID Connect »).
+
+### Étape B5 — Basculer le fournisseur existant sur le flux code
+**Paramètres → Utilisateurs & Sociétés → Fournisseurs OAuth → « XP-NOVA (Authentik) »** (id 4).
+Le module ajoute le champ **Auth Flow** ; réglez :
+
+| Champ | Valeur |
+|---|---|
+| **Auth Flow** | **OpenID Connect (authorization code flow)** (`id_token_code`) |
+| Client ID | *(inchangé — celui d'Authentik)* |
+| **Client Secret** | *(Client Secret du provider Authentik — client Confidential)* |
+| Scope | `openid email profile` |
+| Authorization URL | `https://auth.xp-nova.com/application/o/authorize/` |
+| Token URL | `https://auth.xp-nova.com/application/o/token/` |
+| **JWKS URL** | `https://auth.xp-nova.com/application/o/odoo/jwks/` |
+| Validation/UserInfo (optionnel) | `https://auth.xp-nova.com/application/o/userinfo/` |
+| Autorisé | ✅ |
+
+> `token_map` : par défaut, `auth_oidc` mappe `user_id ← sub`. Comme Authentik est réglé en
+> **Subject mode = email**, `sub = josten@xp-nova.com` = l'`oauth_uid` déjà posé sur l'utilisateur 6.
+> **La liaison existante reste donc valable** — rien à refaire côté utilisateur.
+> Si besoin d'un mapping explicite : `token_map = user_id:sub email:email`.
+
+### Étape B6 — Récupérer le Client Secret côté Authentik
+Authentik → Providers → `odoo Provider` → **Edit** → champ **Client Secret** (icône copier).
+Le client étant **Confidential**, ce secret existe déjà et est requis pour le flux code.
+
+### Étape B7 — Re-test
+Navigation privée → `https://erp.xp-nova.com/web/login` → « Se connecter avec XP-NOVA ».
+Le flux `code` est supporté par Authentik → la connexion doit **aboutir**. ✅
 
 ---
 
