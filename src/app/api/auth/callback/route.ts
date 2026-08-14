@@ -8,11 +8,11 @@ import { exchangeCode, fetchUserinfo, verifyIdToken, type IdClaims } from "@/lib
 import { encryptSession, type PortalSession } from "@/lib/portal/session";
 import { roleFromGroups } from "@/lib/portal/roles";
 import { portalConfig } from "@/lib/portal/config";
+import { externalUrl } from "@/lib/portal/http";
 
 function loginError(request: NextRequest, code: string, msg?: string) {
-  const url = new URL(`/portail/login?error=${code}`, request.nextUrl);
-  if (msg) url.searchParams.set("msg", msg.slice(0, 300));
-  return NextResponse.redirect(url);
+  const q = msg ? `&msg=${encodeURIComponent(msg.slice(0, 300))}` : "";
+  return NextResponse.redirect(externalUrl(request, `/portail/login?error=${code}${q}`));
 }
 
 export async function GET(request: NextRequest) {
@@ -55,7 +55,7 @@ export async function GET(request: NextRequest) {
     };
 
     const token = await encryptSession(session);
-    const res = NextResponse.redirect(new URL("/portail", request.nextUrl));
+    const res = NextResponse.redirect(externalUrl(request, "/portail"));
     res.cookies.set(portalConfig.sessionCookieName, token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",

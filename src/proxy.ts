@@ -6,6 +6,7 @@
  */
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { externalUrl } from "@/lib/portal/http";
 
 const SESSION_COOKIE = "xpn_portal_session";
 
@@ -18,13 +19,12 @@ export function proxy(request: NextRequest) {
 
   // Non connecté sur une route protégée → page de connexion
   if (isProtected && !hasSession) {
-    const url = new URL("/portail/login", request.nextUrl);
-    return NextResponse.redirect(url);
+    return NextResponse.redirect(externalUrl(request, "/portail/login"));
   }
 
   // Déjà connecté et sur la page de login → tableau de bord
   if (isLogin && hasSession) {
-    return NextResponse.redirect(new URL("/portail", request.nextUrl));
+    return NextResponse.redirect(externalUrl(request, "/portail"));
   }
 
   return NextResponse.next();
