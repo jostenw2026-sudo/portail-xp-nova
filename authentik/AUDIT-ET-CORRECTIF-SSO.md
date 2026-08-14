@@ -49,7 +49,29 @@ renvoie **« Accès refusé »** (`/web/login?oauth_error=2`).
 
 ---
 
-## 2. Analyse — pourquoi `oauth_error=2` peut persister
+## 2. CAUSE RACINE CONFIRMÉE (par les logs Odoo)
+
+Le log `/opt/xpnova/odoo19.log` montre, au moment du clic :
+```
+GET /auth_oauth/signin?error=unsupported_response_type
+&error_description=The authorization server does not support obtaining
+ an authorization code using this method  ... 303
+```
+➡️ **Authentik rejette la requête d'autorisation d'Odoo avec `unsupported_response_type`.**
+
+Raison : le module natif Odoo **`auth_oauth` utilise le flux implicite** (`response_type=token`),
+que **Authentik ne supporte pas** (Authentik accepte `code`, `id_token`, `id_token token`…,
+mais pas le `token` implicite seul). Vérifiable via :
+`…/application/o/odoo/.well-known/openid-configuration` → `response_types_supported`.
+
+**Conséquence** : aucune correction de Client ID / subject / liaison utilisateur ne peut
+débloquer ce cas (tout cela est déjà correct). Il faut **changer de flux** →
+**Authorization Code via `auth_oidc`** (voir §5), pleinement supporté par Authentik.
+
+Les causes C1/C2 ci-dessous ont été **écartées** par les vérifications (sub_mode=user_email,
+utilisateur 6 interne et lié). Elles sont conservées pour mémoire.
+
+## 2bis. Analyse initiale — pourquoi `oauth_error=2` (historique)
 
 `oauth_error=2` = OAuth validé mais **aucun utilisateur Odoo correspondant / pas de création**.
 Après liaison de l'utilisateur 6, il ne reste que **4 causes possibles** :
