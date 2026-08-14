@@ -1,48 +1,53 @@
-# Intégration Odoo ⇆ Authentik via OpenID Connect (OIDC)
+# Intégration Odoo ⇆ Authentik via OpenID Connect (OIDC / OAuth2)
 
 Objectif : permettre la connexion à **Odoo** (`https://erp.xp-nova.com`) avec les comptes
-**Authentik** (`https://auth.xp-nova.com`), en SSO OIDC (Authorization Code Flow).
+**Authentik** (`https://auth.xp-nova.com`).
 
-> Prérequis : Authentik opérationnel (fait), Odoo accessible en HTTPS (fait).
-> Aucun secret ne figure dans ce document — les `Client ID`/`Client Secret` réels
-> restent dans Authentik et dans la config Odoo.
-
----
-
-## 0. Choix du module côté Odoo
-
-| Module | Type | Recommandation |
-|---|---|---|
-| `auth_oidc` (OCA – dépôt `OCA/server-auth`) | OIDC **Authorization Code Flow** | ✅ **Recommandé** (sécurisé, standard OIDC) |
-| `auth_oauth` (natif Odoo) | OAuth2 **Implicit Flow** | Repli si OCA indisponible (moins sécurisé) |
-
-Ce guide décrit le chemin **`auth_oidc`**. La variante native est en annexe.
-
-⚠️ **Décision humaine** : installer le module `auth_oidc` suppose d'ajouter le dépôt
-OCA `server-auth` (branche correspondant à votre version d'Odoo : 16.0 / 17.0 / 18.0)
-aux addons, puis de redémarrer Odoo. À valider selon votre mode de déploiement Odoo
-(Coolify ? image custom ? addons montés ?).
+> Aucun secret dans ce document. Les `Client ID`/`Client Secret` réels restent dans
+> Authentik et dans la config Odoo.
 
 ---
 
-## 1. Côté Authentik — créer le Provider + l'Application
+## 0. Contexte réel constaté (VPS)
 
-### 1.a Provider OAuth2/OpenID
+| Élément | Valeur |
+|---|---|
+| Produit | **Odoo 19 Enterprise** (installation hôte, hors Docker) |
+| Service systemd | `xpnova.service` (`systemctl restart xpnova` pour redémarrer) |
+| Répertoire | `/opt/xpnova/xpnova-server` (venv `/opt/xpnova/xpnova-venv`) |
+| Config | `/etc/xpnova-server.conf` |
+| Ports | HTTP `8019`, gevent/longpolling `4519` |
+| BDD | PostgreSQL hôte `127.0.0.1:5432`, user `xpnova` |
+| addons_path | inclut `/opt/data/odoo/local_addonsv19` (emplacement pour modules custom) |
+| Utilisateur système | `xpnova` |
+
+Deux voies d'intégration :
+
+| Voie | Module | Flux | Impact |
+|---|---|---|---|
+| **A (recommandée)** | `auth_oauth` **natif Odoo** | OAuth2 (token) | **UI seulement**, aucun redémarrage, aucun risque prod |
+| B (avancée) | `auth_oidc` (OCA `server-auth`) | OIDC Authorization Code | + sécurisé, mais nécessite déposer un module + `systemctl restart xpnova` |
+
+---
+
+## 1. Côté Authentik — Provider + Application
+
+### 1.a Provider
 **Admin Authentik → Applications → Providers → Create → OAuth2/OpenID Provider**
 
 | Champ | Valeur |
 |---|---|
-| Name | `odoo-oidc-provider` |
-| Authorization flow | `default-provider-authorization-explicit-consent` (ou implicit-consent) |
+| Name | `odoo-provider` |
+| Authorization flow | `default-provider-authorization-explicit-consent` |
 | Client type | **Confidential** |
 | Client ID | *(généré — à copier)* |
 | Client Secret | *(généré — à copier, ne pas divulguer)* |
-| Redirect URIs / Origins | `https://erp.xp-nova.com/auth_oauth/signin` |
-| Signing Key | certificat auto-signé Authentik par défaut |
-| Scopes | `openid`, `email`, `profile` (par défaut) |
+| **Redirect URIs** | `https://erp.xp-nova.com/auth_oauth/signin` |
+| Signing Key | certificat auto-signé Authentik |
+| Scopes | `openid`, `email`, `profile` |
 
-> La redirect URI **doit** correspondre exactement à celle attendue par Odoo
-> (`/auth_oauth/signin` est l'endpoint de retour, utilisé aussi par `auth_oidc`).
+> La Redirect URI **doit** être exactement `https://erp.xp-nova.com/auth_oauth/signin`
+> (endpoint de retour utilisé par `auth_oauth` **et** `auth_oidc`).
 
 ### 1.b Application
 **Applications → Applications → Create**
@@ -51,128 +56,140 @@ aux addons, puis de redémarrer Odoo. À valider selon votre mode de déploiemen
 |---|---|
 | Name | `Odoo` |
 | Slug | `odoo` |
-| Provider | `odoo-oidc-provider` (celui du 1.a) |
+| Provider | `odoo-provider` |
 | Launch URL | `https://erp.xp-nova.com` |
 
-### 1.c URLs OIDC à récupérer
-Après création, l'URL de découverte (tout est dedans) :
+### 1.c Endpoints (déduits du slug `odoo`)
 ```
-https://auth.xp-nova.com/application/o/odoo/.well-known/openid-configuration
-```
-Endpoints individuels (déduits du slug `odoo`) :
-```
-Issuer         : https://auth.xp-nova.com/application/o/odoo/
-Authorization  : https://auth.xp-nova.com/application/o/authorize/
-Token          : https://auth.xp-nova.com/application/o/token/
-UserInfo       : https://auth.xp-nova.com/application/o/userinfo/
-JWKS           : https://auth.xp-nova.com/application/o/odoo/jwks/
-End session    : https://auth.xp-nova.com/application/o/odoo/end-session/
+Découverte : https://auth.xp-nova.com/application/o/odoo/.well-known/openid-configuration
+Authorize  : https://auth.xp-nova.com/application/o/authorize/
+Token      : https://auth.xp-nova.com/application/o/token/
+UserInfo   : https://auth.xp-nova.com/application/o/userinfo/
+JWKS       : https://auth.xp-nova.com/application/o/odoo/jwks/
+Issuer     : https://auth.xp-nova.com/application/o/odoo/
 ```
 
 ---
 
-## 2. Côté Odoo — configurer le provider OIDC (`auth_oidc`)
+## 2. Voie A — module natif `auth_oauth` (UI uniquement, sans redémarrage)
 
-1. **Installer** le module `auth_oidc` (Apps → rechercher « OpenID Connect » →
-   Installer ; nécessite le dépôt OCA `server-auth` dans les addons).
-2. Activer le **mode développeur** (Settings → Developer Tools) si les champs avancés
-   ne sont pas visibles.
-3. **Settings → Users & Companies → OAuth Providers** → *Create* :
+### 2.a Installer le module (aucun restart nécessaire)
+1. Odoo → **Apps** → *Update Apps List* (mode développeur activé).
+2. Rechercher **« OAuth2 Authentication »** (`auth_oauth`) → **Install**.
+
+### 2.b Créer le provider OAuth dans Odoo
+**Settings → Users & Companies → OAuth Providers → Create** :
 
 | Champ Odoo | Valeur |
 |---|---|
-| Provider name | `Authentik` |
-| Allowed | ✅ coché |
-| Login button label | `Se connecter avec XP-NOVA` |
-| Flow | **OpenID Connect (authorization code flow)** |
+| Provider name | `XP-NOVA (Authentik)` |
 | Client ID | *(Client ID du provider Authentik, §1.a)* |
-| Client Secret | *(Client Secret du provider Authentik, §1.a)* |
-| Scope | `openid profile email` |
-| Authorization Endpoint | `https://auth.xp-nova.com/application/o/authorize/` |
-| Token Endpoint | `https://auth.xp-nova.com/application/o/token/` |
-| UserInfo Endpoint | `https://auth.xp-nova.com/application/o/userinfo/` |
-| JWKS URL | `https://auth.xp-nova.com/application/o/odoo/jwks/` |
-| Issuer / Discovery | `https://auth.xp-nova.com/application/o/odoo/` |
+| Allowed | ✅ |
+| Login button label | `Se connecter avec XP-NOVA` |
+| Authorization URL | `https://auth.xp-nova.com/application/o/authorize/` |
+| UserInfo / Validation URL | `https://auth.xp-nova.com/application/o/userinfo/` |
+| Scope | `openid email profile` |
 
-4. **Enregistrer.**
+3. **Enregistrer.** Un bouton « Se connecter avec XP-NOVA » apparaît sur l'écran de login Odoo.
 
-> Selon la version de `auth_oidc`, certains champs (Token/UserInfo/JWKS) se remplissent
-> automatiquement à partir de l'URL de découverte `.well-known`. Si un champ
-> « Well Known / Discovery URL » existe, renseignez :
-> `https://auth.xp-nova.com/application/o/odoo/.well-known/openid-configuration`.
+> `auth_oauth` natif utilise le flux **token/implicite** : le provider Authentik doit
+> autoriser ce mode. Si Authentik exige un `response_type` particulier, préférez la **Voie B**
+> (Authorization Code), plus standard et plus sûre.
 
 ---
 
-## 3. Provisionnement des utilisateurs
+## 3. Voie B — module OCA `auth_oidc` (Authorization Code, avancé)
 
-- **Correspondance** : Odoo relie l'utilisateur OIDC via l'e-mail (claim `email`).
-  Les comptes doivent donc avoir un e-mail cohérent des deux côtés.
-- **Création automatique** : par défaut, Odoo n'auto-crée PAS les utilisateurs OAuth.
-  Deux options :
-  - Créer d'abord l'utilisateur dans Odoo (même e-mail), puis il pourra se connecter en SSO.
-  - Ou activer l'auto-provisioning via `auth_oidc`/`auth_signup` (à évaluer — implication
-    sécurité : tout compte Authentik pourrait créer un user Odoo). **Décision humaine.**
+⚠️ **Nécessite un redémarrage d'Odoo** → planifier une courte fenêtre de maintenance
+(prévenir, sauvegarder d'abord la base Odoo — voir §6).
+
+1. Récupérer `auth_oidc` depuis **OCA `server-auth`** en **branche `19.0`**
+   (si la 19.0 n'est pas encore publiée, rester sur la Voie A en attendant).
+2. Déposer le module dans `/opt/data/odoo/local_addonsv19/` (déjà dans l'addons_path) :
+   ```bash
+   # en tant qu'utilisateur xpnova, dans /opt/data/odoo/local_addonsv19/
+   git clone --branch 19.0 --depth 1 https://github.com/OCA/server-auth.git _oca_server_auth
+   # lier uniquement le module auth_oidc (et ses dépendances) dans l'addons_path
+   ```
+3. **Sauvegarder la base** (voir §6), puis redémarrer : `sudo systemctl restart xpnova`
+4. Odoo → **Apps** → *Update Apps List* → installer **« Authentication OpenID Connect »**.
+5. **Settings → Users → OAuth Providers → Create** :
+   - Flow : **OpenID Connect (authorization code flow)**
+   - Client ID / **Client Secret** : ceux du provider Authentik (§1.a)
+   - Scope : `openid profile email`
+   - Discovery/endpoints : à partir de
+     `https://auth.xp-nova.com/application/o/odoo/.well-known/openid-configuration`
+   - JWKS : `https://auth.xp-nova.com/application/o/odoo/jwks/`
 
 ---
 
-## 4. Mapping des groupes / rôles (optionnel, recommandé)
+## 4. Provisionnement des utilisateurs — **PAS d'auto-création** (décision retenue)
 
-1. Dans Authentik, ajouter au provider un **Scope Mapping** exposant les groupes
-   (claim `groups`) — **Customization → Property Mappings → Create → Scope Mapping** :
+- Odoo ne créera PAS automatiquement les comptes : seuls les utilisateurs **déjà présents
+  dans Odoo** (même e-mail que dans Authentik) pourront se connecter en SSO.
+- Vérifier que `auth_signup` **n'autorise pas** l'inscription libre :
+  **Settings → Users → Signup**  = *« Log in only »* (pas *Free sign up*).
+- Pour chaque utilisateur : créer/mettre à jour le compte Odoo avec l'e-mail Authentik.
+
+---
+
+## 5. Mapping des groupes (optionnel)
+
+1. Authentik : **Customization → Property Mappings → Create → Scope Mapping**
    - Scope name : `groups`
-   - Expression : `return [group.name for group in request.user.ak_groups.all()]`
+   - Expression : `return [g.name for g in request.user.ak_groups.all()]`
    - Ajouter ce scope au provider (§1.a).
-2. Côté Odoo, mapper `groups` → groupes Odoo (via règles `auth_oidc` avancées ou module
-   complémentaire). Permet p.ex. que `XPN-ADMINS` ⇒ administrateurs Odoo.
-   *(Le mapping fin des droits Odoo est une décision métier — à définir avec vous.)*
+2. Odoo : exploiter le claim `groups` pour affecter les droits (règles avancées / module
+   complémentaire). Ex. `XPN-ADMINS` ⇒ groupe d'administration Odoo. **Décision métier.**
 
 ---
 
-## 5. Test de bout en bout
+## 6. Sauvegarde Odoo AVANT toute intervention à risque (Voie B)
 
-1. Fenêtre de navigation privée → `https://erp.xp-nova.com`.
-2. Sur l'écran de login Odoo, cliquer **« Se connecter avec XP-NOVA »**.
-3. Redirection vers Authentik → authentification (+ MFA) → consentement.
-4. Retour sur Odoo, connecté. ✅
-5. Vérifier que l'utilisateur est bien celui attendu (e-mail, droits).
-
-> ⚠️ **Garder un compte administrateur Odoo local** (login/mot de passe classique) actif
-> pendant les tests, en filet de sécurité si le SSO échoue.
+```bash
+# Dump de la base Odoo (user xpnova, PostgreSQL hote) — adapter <DB_ODOO>
+sudo -u postgres pg_dump -Fc <DB_ODOO> > /root/odoo-<DB_ODOO>-$(date +%F-%H%M).dump
+# + filestore
+tar czf /root/odoo-filestore-$(date +%F-%H%M).tgz -C /opt/data/odoo .local/share/Odoo/filestore 2>/dev/null || true
+```
+> Le nom exact de la base Odoo se trouve via l'interface (sélecteur de base) ou
+> `sudo -u postgres psql -l`. `db_name = False` dans la conf ⇒ multi-bases possible.
 
 ---
 
-## 6. Dépannage
+## 7. Test de bout en bout
+
+1. **Garder une session admin Odoo local ouverte** (filet de sécurité).
+2. Navigation privée → `https://erp.xp-nova.com/web/login`.
+3. Cliquer **« Se connecter avec XP-NOVA »** → Authentik (login + MFA + consentement).
+4. Retour Odoo, connecté avec le bon utilisateur. ✅
+
+---
+
+## 8. Retour arrière
+
+- **Voie A** : Odoo → OAuth Providers → décocher *Allowed* (ou supprimer le provider).
+  Aucun redémarrage, effet immédiat.
+- **Voie B** : désinstaller le module `auth_oidc` puis `systemctl restart xpnova` ;
+  restaurer le dump §6 si nécessaire.
+
+---
+
+## 9. Dépannage
 
 | Symptôme | Piste |
 |---|---|
-| `redirect_uri_mismatch` | La Redirect URI d'Authentik (§1.a) doit être exactement `https://erp.xp-nova.com/auth_oauth/signin`. |
-| `invalid_client` | Client ID/Secret mal recopiés entre Authentik et Odoo. |
-| Connexion OK mais « user not found » | Aucun utilisateur Odoo avec cet e-mail ; créez-le ou activez l'auto-provisioning. |
-| Erreur signature/JWKS | JWKS URL erronée ; vérifier le slug (`odoo`) et l'issuer. |
-| Boucle de redirection | Vérifier que `web.base.url` d'Odoo = `https://erp.xp-nova.com` et `web.base.url.freeze`=True. |
+| `redirect_uri_mismatch` | Redirect URI Authentik ≠ `https://erp.xp-nova.com/auth_oauth/signin`. |
+| `invalid_client` | Client ID/Secret mal recopiés. |
+| Connexion OK mais « user not found » | Aucun user Odoo avec cet e-mail (auto-création désactivée par choix). Créer le user. |
+| Boucle de redirection | Vérifier `web.base.url = https://erp.xp-nova.com` (Paramètres système) et `web.base.url.freeze = True`. |
+| Bouton SSO absent | Module `auth_oauth`/`auth_oidc` non installé ou provider *Allowed* décoché. |
 
 ---
 
-## Annexe A — Variante module natif `auth_oauth` (repli)
+## 10. Éléments à décider (humain)
 
-Odoo natif utilise l'**implicit flow**. Dans **Settings → Users → OAuth Providers** :
-- Provider name : `Authentik`
-- Client ID : *(Authentik)*
-- Allowed : ✅
-- Auth Endpoint : `https://auth.xp-nova.com/application/o/authorize/`
-- Scope : `openid email profile`
-- Validation Endpoint (UserInfo) : `https://auth.xp-nova.com/application/o/userinfo/`
-- Data Endpoint : `https://auth.xp-nova.com/application/o/userinfo/`
-
-Dans Authentik, le provider doit alors autoriser le **flow implicite** et la redirect URI
-`https://erp.xp-nova.com/auth_oauth/signin`. Moins sécurisé que `auth_oidc` — à réserver
-au cas où le module OCA n'est pas déployable.
-
----
-
-## Éléments à décider (humain)
-
-- Version exacte d'Odoo et **mode d'ajout des addons** (pour installer `auth_oidc`).
-- **Auto-provisioning** des utilisateurs (oui/non) et politique de sécurité associée.
+- **Voie A vs B** : commencer par A (sans risque). Passer à B si l'on veut le flux
+  Authorization Code (plus sûr) et si la branche OCA 19.0 est disponible.
 - **Mapping des groupes** Authentik → droits Odoo (règles métier).
-- Étendre ensuite le même schéma au **futur portail** clients/experts/fournisseurs.
+- Étendre le même schéma OIDC au **futur portail** clients/experts/fournisseurs.
