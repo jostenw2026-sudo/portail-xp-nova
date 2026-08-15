@@ -163,7 +163,19 @@ export async function getRecentProjects(): Promise<ProjectRow[]> {
   );
 }
 
-/* ---------------------------------------------------------------- Documents */
+/* ---------------------------------------------------------------- Documents
+ *
+ * Odoo 18/19 : le modèle `documents.folder` a disparu ; les dossiers sont
+ * désormais des `documents.document` de `type = "folder"`, et un document
+ * pointe vers son dossier parent via `folder_id`.
+ *
+ * La bibliothèque du portail est ISOLÉE sous un espace de travail parent
+ * nommé `Portail` contenant les sous-dossiers d'audience Public / Clients /
+ * Experts / Fournisseurs / Interne. On ne lit donc jamais les dossiers métier
+ * de l'entreprise (pas de collision de noms, ex. un « Interne » déjà existant).
+ */
+
+const PORTAL_ROOT = "Portail"; // nom de l'espace de travail parent (cf. RAPPORT-PHASE-B)
 
 export interface FolderRow {
   id: number;
@@ -177,21 +189,38 @@ export interface DocumentRow {
   mimetype?: string | false;
 }
 
+/** Sous-dossiers d'audience situés SOUS l'espace parent `Portail`. */
+const getPortalAudienceFolders = cache(async (): Promise<FolderRow[]> => {
+  const roots = await searchRead<FolderRow>(
+    "documents.document",
+    [["type", "=", "folder"], ["name", "=", PORTAL_ROOT]],
+    { fields: ["id", "name"], limit: 1 },
+  );
+  const rootId = roots[0]?.id;
+  if (!rootId) return [];
+  return searchRead<FolderRow>(
+    "documents.document",
+    [["type", "=", "folder"], ["folder_id", "=", rootId]],
+    { fields: ["id", "name"], limit: 20 },
+  );
+});
+
+/** Ids des sous-dossiers autorisés pour une liste de noms d'audience. */
+export async function getRoleFolderIds(folderNames: string[]): Promise<number[]> {
+  const folders = await getPortalAudienceFolders();
+  return folders.filter((f) => folderNames.includes(f.name)).map((f) => f.id);
+}
+
 /**
  * Documents visibles selon les dossiers d'audience autorisés pour le rôle.
- * `folderNames` = noms de dossiers `documents.folder` (ex. ["Public","Clients"]).
+ * `folderNames` = sous-dossiers sous `Portail` (ex. ["Public","Clients"]).
  */
 export async function getDocuments(folderNames: string[]): Promise<DocumentRow[]> {
-  const folders = await searchRead<FolderRow>(
-    "documents.folder",
-    [["name", "in", folderNames]], // CALIBRAGE: noms des dossiers d'audience
-    { fields: ["id", "name"], limit: 50 },
-  );
-  const ids = folders.map((f) => f.id);
+  const ids = await getRoleFolderIds(folderNames);
   if (ids.length === 0) return [];
   return searchRead<DocumentRow>(
     "documents.document",
-    [["folder_id", "in", ids]],
+    [["type", "!=", "folder"], ["folder_id", "in", ids]],
     { fields: ["name", "folder_id", "create_date", "mimetype"], order: "create_date desc", limit: 100 },
   );
 }

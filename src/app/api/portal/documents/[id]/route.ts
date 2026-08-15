@@ -5,7 +5,7 @@
 import { NextResponse } from "next/server";
 import { getOptionalSession } from "@/lib/portal/dal";
 import { roleFolders } from "@/lib/portal/roles";
-import { getDocumentBinary } from "@/lib/portal/odooData";
+import { getDocumentBinary, getRoleFolderIds } from "@/lib/portal/odooData";
 import { OdooNotConfiguredError } from "@/lib/portal/odoo";
 
 export async function GET(_req: Request, ctx: { params: Promise<{ id: string }> }) {
@@ -20,10 +20,13 @@ export async function GET(_req: Request, ctx: { params: Promise<{ id: string }> 
     const doc = await getDocumentBinary(docId);
     if (!doc) return new NextResponse("Introuvable", { status: 404 });
 
-    // Contrôle d'accès : le dossier du document doit être autorisé pour le rôle.
-    const folderName = Array.isArray(doc.folder_id) ? doc.folder_id[1] : "";
-    const allowed = roleFolders[session.role] ?? [];
-    if (!allowed.includes(folderName)) return new NextResponse("Accès refusé", { status: 403 });
+    // Contrôle d'accès : le document doit appartenir à un sous-dossier d'audience
+    // autorisé pour le rôle (vérification par id, sous l'espace parent "Portail").
+    const folderId = Array.isArray(doc.folder_id) ? doc.folder_id[0] : 0;
+    const allowedIds = await getRoleFolderIds(roleFolders[session.role] ?? []);
+    if (!folderId || !allowedIds.includes(folderId)) {
+      return new NextResponse("Accès refusé", { status: 403 });
+    }
 
     if (!doc.datas || typeof doc.datas !== "string") {
       return new NextResponse("Contenu indisponible", { status: 404 });
