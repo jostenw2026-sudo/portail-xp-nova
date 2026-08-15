@@ -1,6 +1,18 @@
 import type { ReactNode } from "react";
 import { roleLabels, type PortalRole } from "@/lib/portal/roles";
 import type { PortalSession } from "@/lib/portal/session";
+import {
+  ClientProjects,
+  ClientInvoices,
+  ExpertMissions,
+  ExpertPayments,
+  VendorOrders,
+  VendorInvoices,
+  AdminSummaryCards,
+  AdminLeads,
+  AdminProjects,
+  LibraryLink,
+} from "./modules";
 
 /** Bandeau « connecté en tant que … » + déconnexion (form POST, sans JS). */
 export function PortalChrome({ session }: { session: PortalSession }) {
@@ -30,71 +42,64 @@ export function PortalChrome({ session }: { session: PortalSession }) {
   );
 }
 
-function Card({ title, children }: { title: string; children: ReactNode }) {
-  return (
-    <div className="rounded-lg border border-line bg-paper p-6 shadow-sm">
-      <h3 className="mb-2 font-display text-xl text-navy">{title}</h3>
-      <div className="text-grey">{children}</div>
-    </div>
-  );
-}
-
-function Placeholder() {
-  return (
-    <span className="mt-3 inline-block rounded bg-light px-2 py-0.5 text-xs text-grey">
-      Contenu à venir (données de démonstration)
-    </span>
-  );
-}
-
-const dashboards: Record<PortalRole, { title: string; intro: string; cards: string[] }> = {
-  client: {
-    title: "Espace client",
-    intro: "Suivez vos projets, documents et échanges avec XP-NOVA.",
-    cards: ["Mes projets", "Mes documents", "Mes demandes", "Facturation"],
-  },
-  expert: {
-    title: "Espace expert",
-    intro: "Vos missions, disponibilités et livrables au sein du réseau XP-NOVA.",
-    cards: ["Mes missions", "Mon profil / CV", "Mes livrables", "Disponibilités"],
-  },
-  fournisseur: {
-    title: "Espace fournisseur",
-    intro: "Vos consultations, commandes et documents contractuels.",
-    cards: ["Appels d'offres", "Mes commandes", "Documents contractuels", "Paiements"],
-  },
-  admin: {
-    title: "Administration du portail",
-    intro: "Vue interne XP-NOVA : pilotage des accès et des contenus du portail.",
-    cards: ["Utilisateurs & rôles", "Projets (tous)", "Demandes entrantes", "Statistiques"],
-  },
-  invite: {
-    title: "Aucun rôle attribué",
-    intro:
-      "Votre compte est authentifié mais n'est rattaché à aucun groupe (client / expert / fournisseur). Contactez un administrateur XP-NOVA pour obtenir un accès.",
-    cards: [],
-  },
+const meta: Record<PortalRole, { title: string; intro: string }> = {
+  client: { title: "Espace client", intro: "Suivez vos projets, vos factures et la bibliothèque XP-NOVA." },
+  expert: { title: "Espace expert", intro: "Vos missions, vos honoraires et vos ressources." },
+  fournisseur: { title: "Espace fournisseur", intro: "Vos commandes, vos factures et vos documents." },
+  admin: { title: "Administration du portail", intro: "Vue interne XP-NOVA : projets, demandes et pilotage." },
+  invite: { title: "Aucun rôle attribué", intro: "Votre compte est authentifié mais rattaché à aucun espace." },
 };
 
+function Grid({ children }: { children: ReactNode }) {
+  return <div className="mt-8 grid gap-6">{children}</div>;
+}
+
 export function RoleDashboard({ session }: { session: PortalSession }) {
-  const d = dashboards[session.role];
+  const role = session.role;
+  const m = meta[role];
+  const email = session.email;
+
   return (
     <div className="container-x py-10 md:py-14">
-      <p className="eyebrow mb-3">{roleLabels[session.role]}</p>
-      <h1 className="title-1 gold-rule text-navy">{d.title}</h1>
-      <p className="mt-3 max-w-2xl text-lg text-grey">{d.intro}</p>
-
-      {d.cards.length > 0 && (
-        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {d.cards.map((c) => (
-            <Card key={c} title={c}>
-              <Placeholder />
-            </Card>
-          ))}
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <p className="eyebrow mb-3">{roleLabels[role]}</p>
+          <h1 className="title-1 gold-rule text-navy">{m.title}</h1>
+          <p className="mt-3 max-w-2xl text-lg text-grey">{m.intro}</p>
         </div>
+        {role !== "invite" && <LibraryLink />}
+      </div>
+
+      {role === "client" && (
+        <Grid>
+          <ClientProjects email={email} />
+          <ClientInvoices email={email} />
+        </Grid>
       )}
 
-      {session.role === "invite" && (
+      {role === "expert" && (
+        <Grid>
+          <ExpertMissions email={email} />
+          <ExpertPayments email={email} />
+        </Grid>
+      )}
+
+      {role === "fournisseur" && (
+        <Grid>
+          <VendorOrders email={email} />
+          <VendorInvoices email={email} />
+        </Grid>
+      )}
+
+      {role === "admin" && (
+        <Grid>
+          <AdminSummaryCards />
+          <AdminLeads />
+          <AdminProjects />
+        </Grid>
+      )}
+
+      {role === "invite" && (
         <div className="mt-8 rounded-lg border border-line bg-light p-6 text-grey">
           <p className="font-semibold text-navy">Comment obtenir un accès ?</p>
           <p className="mt-2">

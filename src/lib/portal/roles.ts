@@ -27,3 +27,12 @@ export const roleLabels: Record<PortalRole, string> = {
   fournisseur: "Fournisseur",
   invite: "Invité (aucun rôle attribué)",
 };
+
+/** Dossiers Odoo Documents visibles selon le rôle (bibliothèque). */
+export const roleFolders: Record<PortalRole, string[]> = {
+  admin: ["Public", "Clients", "Experts", "Fournisseurs", "Interne"],
+  client: ["Public", "Clients"],
+  expert: ["Public", "Experts"],
+  fournisseur: ["Public", "Fournisseurs"],
+  invite: ["Public"],
+};
