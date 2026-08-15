@@ -70,8 +70,11 @@ tant que l'activation (§5) n'est pas faite : rien de sensible n'est exposé par
      `res.partner`, `project.project`, `project.task`, `account.move`,
      `sale.order`, `purchase.order`, `documents.document`, `documents.folder`.
    - Générer une **clé API** pour ce compte (Préférences → Compte de sécurité).
-2. **Créer les dossiers Documents** : `Public`, `Clients`, `Experts`,
-   `Fournisseurs`, `Interne` (noms exacts — cf. §6 calibrage).
+2. **Créer l'espace bibliothèque** (Odoo 19 — les dossiers sont des
+   `documents.document` de type dossier) : un espace de travail parent nommé
+   **`Portail`**, contenant 5 sous-dossiers `Public`, `Clients`, `Experts`,
+   `Fournisseurs`, `Interne` (noms exacts). Le portail ne lit **que** sous ce
+   parent, donc aucune collision avec vos dossiers métier existants.
 3. **Relier chaque utilisateur du portail à sa fiche `res.partner`** par le **même
    e-mail** que celui reçu d'Authentik.
 4. **Ajouter les variables d'environnement dans Coolify** (service du portail) :
