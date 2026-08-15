@@ -21,19 +21,23 @@ function rpLogoutEnabled(): boolean {
 
 function handle(request: NextRequest) {
   const home = externalUrl(request, "/");
+  // `id_token_hint` : indispensable pour un logout Authentik silencieux (sinon
+  // l'end-session déclenche un flow interactif qui échoue en CSRF).
+  const idHint = request.cookies.get("xpn_oidc_idt")?.value;
 
   let target = home;
-  if (rpLogoutEnabled() && portalConfig.clientId()) {
+  if (rpLogoutEnabled() && idHint) {
     const q = new URLSearchParams({
+      id_token_hint: idHint,
       post_logout_redirect_uri: home,
-      client_id: portalConfig.clientId(),
     });
     target = `${portalConfig.endSessionUrl()}?${q.toString()}`;
   }
 
   const res = NextResponse.redirect(target);
-  // On efface la session locale sur la réponse de redirection elle-même.
+  // On efface les cookies locaux sur la réponse de redirection elle-même.
   res.cookies.set(portalConfig.sessionCookieName, "", { path: "/", maxAge: 0 });
+  res.cookies.set("xpn_oidc_idt", "", { path: "/", maxAge: 0 });
   return res;
 }
 

@@ -63,6 +63,16 @@ export async function GET(request: NextRequest) {
       path: "/",
       maxAge: portalConfig.sessionMaxAge,
     });
+    // Conserver l'id_token (assertion d'identité, pas un jeton d'accès) dans un
+    // cookie httpOnly dédié : sert uniquement d'`id_token_hint` à la déconnexion
+    // OIDC (logout silencieux Authentik, sans écran CSRF).
+    res.cookies.set("xpn_oidc_idt", tokens.id_token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: portalConfig.sessionMaxAge,
+    });
     // Nettoyer les cookies temporaires
     for (const c of ["xpn_oidc_state", "xpn_oidc_nonce", "xpn_oidc_verifier"]) {
       res.cookies.set(c, "", { path: "/", maxAge: 0 });
