@@ -15,7 +15,30 @@ export default function Header() {
   const NAV = en ? navEn : nav;
   const CTA = en ? ctaEn : cta;
   const home = en ? "/en" : "/";
-  const switchTarget = en ? (pathname.replace(/^\/en\/?/, "/") || "/") : `/en${pathname === "/" ? "" : pathname}`;
+  // Pages disposant d'un miroir anglais. Le sélecteur de langue préfixait
+  // aveuglément par /en, ce qui menait à un 404 sur les pages sans miroir
+  // (mentions légales, confidentialité, procédure d'exportation).
+  const EN_MIROIRS = [
+    "/cabinet",
+    "/metiers",
+    "/methode",
+    "/references",
+    "/equipe",
+    "/ressources",
+    "/engagements",
+    "/carrieres",
+    "/contact",
+  ];
+  const EN_SANS_MIROIR = ["/ressources/procedure-export"];
+  const aUnMiroir =
+    pathname === "/" ||
+    (EN_MIROIRS.some((p) => pathname === p || pathname.startsWith(p + "/")) &&
+      !EN_SANS_MIROIR.includes(pathname));
+  const switchTarget = en
+    ? pathname.replace(/^\/en\/?/, "/") || "/"
+    : aUnMiroir
+      ? `/en${pathname === "/" ? "" : pathname}`
+      : "/en";
 
   return (
     <header className="sticky top-0 z-50 bg-paper/95 backdrop-blur border-b border-line">
