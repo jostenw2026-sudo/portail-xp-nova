@@ -68,6 +68,11 @@ export interface InstitutionCm {
   sigle: string;
   nom: string;
   role: string;
+  /**
+   * Site officiel, vérifié le 2026-08-17. Absent quand l’organisme n’a pas de
+   * site joignable — mieux vaut aucun lien qu’un lien mort ou détourné.
+   */
+  lien?: { url: string; domaine: string };
 }
 
 export const PROCEDURE_PHASES: ProcedurePhase[] = [
@@ -393,46 +398,62 @@ export const INSTITUTIONS_CM: InstitutionCm[] = [
     sigle: 'GUCE',
     nom: 'Guichet Unique des Opérations du Commerce Extérieur',
     role: 'Point d’entrée dématérialisé des formalités d’import-export, à Douala. Fait le lien entre l’exportateur, les administrations et les opérateurs portuaires.',
+    lien: { url: 'https://www.guichetunique.cm', domaine: 'guichetunique.cm' },
   },
   {
     sigle: 'DGD / CAMCIS',
     nom: 'Direction générale des douanes — système d’information douanier',
     role: 'Déclaration d’exportation, circuit de contrôle, liquidation des droits et bon à enlever. Toute la procédure douanière passe par CAMCIS.',
+    // Le site officiel n’est joignable qu’en HTTP : son certificat TLS ne répond pas.
+    lien: { url: 'http://www.douanes.cm', domaine: 'douanes.cm' },
   },
   {
     sigle: 'MINADER',
     nom: 'Ministère de l’Agriculture et du Développement rural',
     role: 'Organisation nationale de la protection des végétaux : inspection phytosanitaire, certificat phytosanitaire, agrément des traitements NIMP 15.',
+    lien: { url: 'https://www.minader.cm', domaine: 'minader.cm' },
   },
   {
     sigle: 'MINEPIA',
     nom: 'Ministère de l’Élevage, des Pêches et des Industries animales',
     role: 'Certificats sanitaires vétérinaires pour les produits animaux, halieutiques et d’élevage.',
+    lien: { url: 'https://www.minepia.cm', domaine: 'minepia.cm' },
   },
   {
     sigle: 'CCIMA',
     nom: 'Chambre de commerce, d’industrie, des mines et de l’artisanat',
     role: 'Délivrance des certificats d’origine, dont l’EUR.1 pour le marché européen.',
+    lien: { url: 'https://www.ccima.cm', domaine: 'ccima.cm' },
   },
   {
     sigle: 'ANOR',
     nom: 'Agence des normes et de la qualité',
     role: 'Normalisation et certification : normes applicables au produit, au conditionnement et à l’étiquetage.',
+    lien: { url: 'https://www.anor.cm', domaine: 'anor.cm' },
   },
   {
-    sigle: 'ONCC / CICC',
-    nom: 'Office national du cacao et du café — Conseil interprofessionnel',
-    role: 'Contrôle de qualité à l’export et encadrement interprofessionnel des filières cacao et café.',
+    sigle: 'ONCC',
+    nom: 'Office national du cacao et du café',
+    role: 'Contrôle de qualité à l’exportation des fèves et du café. L’interprofession de la filière est portée par le CICC, dont le site n’est pas joignable à ce jour.',
+    lien: { url: 'https://www.oncc.cm', domaine: 'oncc.cm' },
   },
   {
-    sigle: 'PAD / PAK',
-    nom: 'Ports autonomes de Douala et de Kribi',
-    role: 'Terminaux d’embarquement, pesée VGM, prises frigorifiques et mise à bord.',
+    sigle: 'PAD',
+    nom: 'Port autonome de Douala',
+    role: 'Principal port d’embarquement : terminaux, pesée VGM, prises frigorifiques et mise à bord.',
+    lien: { url: 'https://www.pad.cm', domaine: 'pad.cm' },
   },
   {
-    sigle: 'Banque domiciliataire',
-    nom: 'Établissement agréé de la place',
-    role: 'Domiciliation de l’opération d’exportation puis rapatriement des recettes, au titre de la réglementation des changes CEMAC.',
+    sigle: 'PAK',
+    nom: 'Port autonome de Kribi',
+    role: 'Port en eau profonde : accueille les navires de plus grand tirant d’eau, alternative à Douala.',
+    lien: { url: 'https://www.pak.cm', domaine: 'pak.cm' },
+  },
+  {
+    sigle: 'BEAC',
+    nom: 'Banque des États de l’Afrique centrale',
+    role: 'Réglementation des changes CEMAC : domiciliation de l’opération d’exportation auprès d’une banque agréée, puis rapatriement des recettes.',
+    lien: { url: 'https://www.beac.int', domaine: 'beac.int' },
   },
 ];
 

@@ -67,14 +67,24 @@ export default function ProcedureExportPage() {
         <SectionTitle
           eyebrow="Repères Cameroun"
           title="Les guichets et autorités à connaître"
-          intro="Qui délivre quoi, et où le dossier passe. Ces repères se retrouvent, étape par étape, dans le détail de la procédure ci-dessus."
+          intro="Qui délivre quoi, et où le dossier passe. Ces repères se retrouvent, étape par étape, dans le détail de la procédure ci-dessus. Les liens mènent aux sites officiels, vérifiés en août 2026."
         />
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {INSTITUTIONS_CM.map((i) => (
-            <div key={i.sigle} className="rounded-lg border border-line bg-paper p-6">
+            <div key={i.sigle} className="flex flex-col rounded-lg border border-line bg-paper p-6">
               <p className="font-bold tracking-wide text-gold">{i.sigle}</p>
               <h3 className="title-3 mt-1 text-navy">{i.nom}</h3>
               <p className="mt-2 text-grey">{i.role}</p>
+              {i.lien && (
+                <a
+                  href={i.lien.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-4 font-semibold text-royal"
+                >
+                  {i.lien.domaine} ↗
+                </a>
+              )}
             </div>
           ))}
         </div>
