@@ -161,6 +161,7 @@ export const PROCEDURE_ETAPES: ProcedureEtape[] = [
     ],
     documents: [
       { nom: 'Certificat phytosanitaire officiel', code: 'PHYTO-EXP', type: 'Clé' },
+      { nom: 'Certificat d’inspection qualité (tierce partie)', code: 'SGS-QUAL', type: 'Inspection' },
       { nom: 'Rapport d’analyse LMR (laboratoire)', code: 'LAB-RES', type: 'Obligatoire' },
     ],
     vigilance:
@@ -191,6 +192,7 @@ export const PROCEDURE_ETAPES: ProcedureEtape[] = [
     ],
     documents: [
       { nom: 'Liste de colisage (packing list)', code: 'PL-01', type: 'Obligatoire' },
+      { nom: 'Certificat de fumigation', code: 'FUM-CERT', type: 'Vracs & noix' },
       { nom: 'Certificat de traitement NIMP 15 (palettes)', code: 'NIMP-15', type: 'Norme' },
     ],
     vigilance:
@@ -221,6 +223,7 @@ export const PROCEDURE_ETAPES: ProcedureEtape[] = [
     documents: [
       { nom: 'Facture commerciale d’exportation', code: 'COM-INV', type: 'Clé' },
       { nom: 'Certificat d’origine (chambre de commerce)', code: 'COO-01', type: 'Douane' },
+      { nom: 'Lettre de crédit irrévocable (L/C)', code: 'LC-BANK', type: 'Garantie de paiement' },
     ],
     vigilance:
       'Toute incohérence entre le poids net de la liste de colisage et celui de la facture commerciale bloque le dédouanement.',
@@ -280,6 +283,7 @@ export const PROCEDURE_ETAPES: ProcedureEtape[] = [
     documents: [
       { nom: 'Déclaration d’exportation (EX1 / DUM)', code: 'EX-1', type: 'Douane' },
       { nom: 'Bon à enlever (BAE) à l’export', code: 'BAE-EXP', type: 'Autorisation' },
+      { nom: 'Bordereau de suivi cargaison (BESC / CTN)', code: 'BESC-01', type: 'Suivi maritime' },
     ],
     vigilance:
       'Un blocage en douane d’origine de plus de 48 heures compromet la qualité des produits très périssables.',

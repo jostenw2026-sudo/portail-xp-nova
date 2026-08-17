@@ -18,6 +18,13 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Callout } from "./ui";
 import { ProcedureIcone } from "./ProcedureIcones";
 import {
+  VueAcheteurs,
+  VueDiagnostic,
+  VueFilieres,
+  VueIncoterms,
+  VueModeles,
+} from "./ProcedureGuideViews";
+import {
   PROCEDURE_ACTEURS,
   PROCEDURE_ETAPES,
   PROCEDURE_FROID,
@@ -28,14 +35,30 @@ import {
   type ProcedureEtape,
 } from "@/content/procedure-export";
 
-type Vue = "etapes" | "acteurs" | "documents";
+type Vue =
+  | "etapes"
+  | "acteurs"
+  | "documents"
+  | "acheteurs"
+  | "diagnostic"
+  | "incoterms"
+  | "filieres"
+  | "modeles";
 type Filtre = ActeurId | "tous";
 
 const VUES: { id: Vue; label: string }[] = [
   { id: "etapes", label: "Les 9 étapes" },
   { id: "acteurs", label: "Qui fait quoi" },
   { id: "documents", label: "Dossier documentaire" },
+  { id: "acheteurs", label: "Acheteurs & arnaques" },
+  { id: "diagnostic", label: "10 erreurs" },
+  { id: "incoterms", label: "Incoterms & prix" },
+  { id: "filieres", label: "Filières" },
+  { id: "modeles", label: "Modèles de documents" },
 ];
+
+/** Vues où le filtre par acteur a un sens. */
+const VUES_FILTRABLES: Vue[] = ["etapes", "acteurs"];
 
 // Repère de phase porté par la pastille, l'étiquette et le bandeau du panneau.
 // Classes écrites en entier pour rester détectables par Tailwind.
@@ -60,8 +83,21 @@ const PHASE: Record<1 | 2 | 3, { puce: string; chip: string; bandeau: string }> 
 
 const DOCUMENTS = tousLesDocuments();
 
-function concerne(etape: ProcedureEtape, filtre: Filtre): boolean {
-  return filtre === "tous" || etape.acteurs.some((a) => a.id === filtre);
+function concerne(etape: ProcedureEtape, filtre: Filtre, recherche: string): boolean {
+  const parActeur = filtre === "tous" || etape.acteurs.some((a) => a.id === filtre);
+  const q = recherche.trim().toLowerCase();
+  if (!q) return parActeur;
+  const texte = [
+    etape.titre,
+    etape.sousTitre,
+    etape.description,
+    ...etape.actions,
+    ...etape.documents.map((d) => `${d.nom} ${d.code}`),
+    ...etape.reperesCm,
+  ]
+    .join(" ")
+    .toLowerCase();
+  return parActeur && texte.includes(q);
 }
 
 function acteur(id: ActeurId) {
@@ -72,14 +108,15 @@ export default function ProcedureExport() {
   const [vue, setVue] = useState<Vue>("etapes");
   const [filtre, setFiltre] = useState<Filtre>("tous");
   const [sombre, setSombre] = useState(false);
+  const [recherche, setRecherche] = useState("");
   const [etapeOuverte, setEtapeOuverte] = useState<number | null>(null);
   const [cochees, setCochees] = useState<Record<string, boolean>>({});
   const panneauRef = useRef<HTMLDivElement>(null);
 
   const etape = etapeOuverte ? (PROCEDURE_ETAPES.find((e) => e.id === etapeOuverte) ?? null) : null;
-  const nbConcernees = PROCEDURE_ETAPES.filter((e) => concerne(e, filtre)).length;
+  const nbConcernees = PROCEDURE_ETAPES.filter((e) => concerne(e, filtre, recherche)).length;
   const nbCochees = DOCUMENTS.filter((d) => cochees[d.code]).length;
-  const razPossible = filtre !== "tous" || nbCochees > 0;
+  const razPossible = filtre !== "tous" || nbCochees > 0 || recherche !== "";
 
   const fermer = useCallback(() => setEtapeOuverte(null), []);
   const naviguer = useCallback((sens: -1 | 1) => {
@@ -96,6 +133,7 @@ export default function ProcedureExport() {
   const raz = () => {
     setFiltre("tous");
     setCochees({});
+    setRecherche("");
   };
 
   useEffect(() => {
@@ -157,6 +195,18 @@ export default function ProcedureExport() {
               </button>
             ))}
           </div>
+          <label className="flex flex-col gap-0.5">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-grey">
+              Rechercher
+            </span>
+            <input
+              type="search"
+              value={recherche}
+              onChange={(e) => setRecherche(e.target.value)}
+              placeholder="Étape, document, pièce, guichet…"
+              className="w-56 rounded-md border border-line bg-paper px-3 py-1.5 text-sm text-navy focus:border-gold focus:outline-none"
+            />
+          </label>
           <button
             type="button"
             aria-pressed={sombre}
@@ -169,7 +219,7 @@ export default function ProcedureExport() {
           </button>
         </div>
 
-        {vue !== "documents" && (
+        {VUES_FILTRABLES.includes(vue) && (
           <div className="mt-5">
             <p id="pex-filtre-label" className="eyebrow mb-2">
               Filtrer par acteur
@@ -232,9 +282,26 @@ export default function ProcedureExport() {
             ))}
           </ol>
 
+          <div className="mb-5 flex flex-wrap items-center gap-2 print:hidden">
+            <span className="mr-1 text-[10px] font-bold uppercase tracking-wider text-grey">
+              Accès rapide
+            </span>
+            {PROCEDURE_ETAPES.map((e) => (
+              <button
+                key={e.id}
+                type="button"
+                title={e.titre}
+                onClick={() => setEtapeOuverte(e.id)}
+                className="rounded border border-line bg-light px-2.5 py-1 text-xs font-bold text-navy transition-colors hover:bg-gold"
+              >
+                {String(e.id).padStart(2, "0")}
+              </button>
+            ))}
+          </div>
+
           <div className="pex-flow grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {PROCEDURE_ETAPES.map((e) => {
-              const actif = concerne(e, filtre);
+              const actif = concerne(e, filtre, recherche);
               return (
                 <button
                   key={e.id}
@@ -415,6 +482,33 @@ export default function ProcedureExport() {
               </ul>
             </div>
           </aside>
+        </div>
+      )}
+
+      {/* ── Vues du guide pratique ── */}
+      {vue === "acheteurs" && (
+        <div className="mt-8">
+          <VueAcheteurs />
+        </div>
+      )}
+      {vue === "diagnostic" && (
+        <div className="mt-8">
+          <VueDiagnostic />
+        </div>
+      )}
+      {vue === "incoterms" && (
+        <div className="mt-8">
+          <VueIncoterms />
+        </div>
+      )}
+      {vue === "filieres" && (
+        <div className="mt-8">
+          <VueFilieres />
+        </div>
+      )}
+      {vue === "modeles" && (
+        <div className="mt-8">
+          <VueModeles recherche={recherche} />
         </div>
       )}
 

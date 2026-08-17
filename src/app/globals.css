@@ -176,6 +176,27 @@
   body.pex-print footer {
     display: none !important;
   }
+  /* Impression d'un modèle de document : seule la feuille sort. */
+  body.pex-print-modele header,
+  body.pex-print-modele footer,
+  body.pex-print-modele main > *:not(:has(.pex-modale)) {
+    display: none !important;
+  }
+  body.pex-print-modele .pex-modale {
+    position: static;
+    padding: 0;
+  }
+  body.pex-print-modele .pex-modale__box {
+    max-height: none;
+    max-width: none;
+    border: none;
+    box-shadow: none;
+  }
+  body.pex-print-modele .pex-modale__corps {
+    overflow: visible;
+    padding: 0;
+    background: #fff;
+  }
 }
 
 /* ============================================================
