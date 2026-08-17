@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { PageHero, Breadcrumbs, CTABanner } from "@/components/blocks";
 import { Section, SectionTitle } from "@/components/ui";
 import { ressources } from "@/content/ressources";
@@ -23,6 +24,29 @@ export default function RessourcesPage() {
       <Breadcrumbs items={[{ label: "Ressources" }]} />
       <JsonLd data={breadcrumbLd([{ label: "Ressources", href: "/ressources" }])} />
       <Section>
+        <SectionTitle
+          eyebrow="Consultation libre"
+          title="Publications interactives"
+          intro="Des référentiels techniques consultables directement en ligne, sans inscription."
+        />
+        <Link
+          href="/ressources/procedure-export"
+          className="group block rounded-lg border border-line bg-paper p-6 no-underline transition-shadow hover:shadow-lg"
+        >
+          <p className="eyebrow">Procédure · Export agricole</p>
+          <h3 className="title-3 mt-2 text-navy group-hover:text-royal">
+            La chaîne d&apos;exportation agricole, étape par étape
+          </h3>
+          <p className="mt-2 text-grey">
+            9 étapes, 6 intervenants et 18 pièces documentaires — du champ à l&apos;entrepôt de
+            l&apos;acheteur. Filtrez par acteur, ouvrez le détail de chaque étape, cochez et imprimez
+            votre dossier documentaire.
+          </p>
+          <span className="mt-4 inline-block font-semibold text-royal">Ouvrir la procédure →</span>
+        </Link>
+      </Section>
+
+      <Section tone="light">
         <SectionTitle eyebrow="Documents" title="À télécharger ou à demander" />
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {ressources.map((r) => (

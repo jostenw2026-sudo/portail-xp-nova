@@ -32,5 +32,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${base}/metiers/${m.slug}`, lastModified: now, changeFrequency: "monthly" as const, priority: 0.7 },
     { url: `${base}/en/metiers/${m.slug}`, lastModified: now, changeFrequency: "monthly" as const, priority: 0.6 },
   ]);
-  return [...frStatic, ...enStatic, ...metierPages];
+  // Publications interactives — pages FR uniquement (pas encore de miroir EN).
+  const publications = [
+    {
+      url: `${base}/ressources/procedure-export`,
+      lastModified: now,
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    },
+  ];
+  return [...frStatic, ...enStatic, ...metierPages, ...publications];
 }
