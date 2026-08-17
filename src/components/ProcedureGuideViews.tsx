@@ -236,15 +236,17 @@ export function VueAcheteurs() {
         <ul className="mt-4 flex flex-col gap-2">
           {OUTILS_VERIFICATION.map((o) => (
             <li
-              key={o.nom}
-              className="flex items-center gap-3 rounded-md border border-line px-4 py-3"
+              key={o.etiquette}
+              className="flex flex-col gap-2 rounded-md border border-line px-4 py-3"
             >
-              <span className="min-w-0">
-                <b className="block text-sm text-navy">{o.nom}</b>
-                <span className="block text-xs text-grey">{o.usage}</span>
-              </span>
-              <span className="ml-auto shrink-0 rounded bg-gold/15 px-2 py-0.5 text-xs font-bold text-navy">
+              <span className="self-start rounded bg-gold/15 px-2 py-0.5 text-xs font-bold text-navy">
                 {o.etiquette}
+              </span>
+              <span className="text-sm text-grey">{o.usage}</span>
+              <span className="flex flex-wrap gap-2">
+                {o.services.map((s) => (
+                  <LienService key={s.url} url={s.url} nom={s.nom} detail={s.domaine} />
+                ))}
               </span>
             </li>
           ))}
@@ -257,17 +259,27 @@ export function VueAcheteurs() {
           </p>
           <div className="mt-3 flex flex-wrap gap-2">
             {SALONS.map((s) => (
-              <span
-                key={s}
-                className="rounded-md border border-line bg-paper px-3 py-1.5 text-sm font-semibold text-navy"
-              >
-                {s}
-              </span>
+              <LienService key={s.url} url={s.url} nom={s.nom} detail={s.lieu} />
             ))}
           </div>
         </div>
       </div>
     </div>
+  );
+}
+
+/** Lien sortant vers un service ou un salon, avec son domaine ou son lieu. */
+function LienService({ url, nom, detail }: { url: string; nom: string; detail: string }) {
+  return (
+    <a
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="inline-flex items-baseline gap-2 rounded-md border border-line bg-paper px-3 py-1.5 text-sm font-semibold text-navy no-underline transition-colors hover:border-gold"
+    >
+      {nom}
+      <span className="text-xs font-medium text-grey">{detail} ↗</span>
+    </a>
   );
 }
 

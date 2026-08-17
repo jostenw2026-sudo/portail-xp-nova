@@ -168,31 +168,54 @@ export const NIVEAUX_RISQUE: NiveauRisque[] = [
   },
 ];
 
-export interface OutilVerification {
+/** Service tiers, avec son adresse — liens vérifiés le 2026-08-17. */
+export interface LienExterne {
   nom: string;
+  url: string;
+  domaine: string;
+}
+
+export interface OutilVerification {
   usage: string;
   etiquette: string;
+  services: LienExterne[];
 }
 
 export const OUTILS_VERIFICATION: OutilVerification[] = [
   {
-    nom: 'ITC Trade Map, Tridge',
     usage: 'Cartographie des flux commerciaux et des marchés acheteurs par produit.',
     etiquette: 'Marchés',
+    services: [
+      { nom: 'ITC Trade Map', url: 'https://www.trademap.org', domaine: 'trademap.org' },
+      { nom: 'Tridge', url: 'https://www.tridge.com', domaine: 'tridge.com' },
+    ],
   },
   {
-    nom: 'ImportGenius, Panjiva',
     usage: 'Historique réel des connaissements et des déclarations douanières d’un importateur.',
     etiquette: 'Antécédents',
+    services: [
+      { nom: 'ImportGenius', url: 'https://www.importgenius.com', domaine: 'importgenius.com' },
+      { nom: 'Panjiva', url: 'https://panjiva.com', domaine: 'panjiva.com' },
+    ],
   },
   {
-    nom: 'Kompass, registres du commerce',
-    usage: 'Existence juridique, dirigeants et adresse déclarée de la société.',
+    usage:
+      'Existence juridique, dirigeants et adresse déclarée de la société — à recouper avec le registre du commerce du pays de l’acheteur.',
     etiquette: 'Juridique',
+    services: [{ nom: 'Kompass', url: 'https://www.kompass.com', domaine: 'kompass.com' }],
   },
 ];
 
-export const SALONS = ['ANUGA (Cologne)', 'Gulfood (Dubaï)', 'SIAL (Paris, Shanghai)', 'BioFach (bio)'];
+export interface Salon extends LienExterne {
+  lieu: string;
+}
+
+export const SALONS: Salon[] = [
+  { nom: 'ANUGA', lieu: 'Cologne', url: 'https://www.anuga.com', domaine: 'anuga.com' },
+  { nom: 'Gulfood', lieu: 'Dubaï', url: 'https://www.gulfood.com', domaine: 'gulfood.com' },
+  { nom: 'SIAL Paris', lieu: 'Paris', url: 'https://www.sialparis.com', domaine: 'sialparis.com' },
+  { nom: 'BioFach', lieu: 'Nuremberg — bio', url: 'https://www.biofach.de', domaine: 'biofach.de' },
+];
 
 /* ─────────────── Diagnostic : les 10 erreurs courantes ─────────────── */
 
