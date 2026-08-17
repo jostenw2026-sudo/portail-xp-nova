@@ -25,6 +25,8 @@
   --color-royal: #00289a;
   --color-gold: #d4a017;
   --color-gold-soft: #e9c25a;
+  /* Or profond — seule variante d'or qui porte du texte blanc (charte §8.1). */
+  --color-gold-deep: #8a6300;
   --color-ink: #1a1a2e;
   --color-grey: #5a6072;
   --color-light: #f4f5f8;
@@ -174,4 +176,101 @@
   body.pex-print footer {
     display: none !important;
   }
+}
+
+/* ============================================================
+   Procédure d'exportation (/ressources/procedure-export)
+   Deux comportements que les utilitaires n'expriment pas :
+   la ligne de flux animée entre les cartes d'étapes, et la
+   bascule sombre locale au module (la page reste en clair).
+   ============================================================ */
+
+/* Ligne de flux : pointillé animé reliant les cartes d'une même rangée. */
+.pex-flow > * {
+  position: relative;
+}
+.pex-flow > *::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  width: 1.25rem; /* = gap-5 */
+  height: 2px;
+  background-image: linear-gradient(
+    90deg,
+    var(--color-line) 0 6px,
+    transparent 6px 12px
+  );
+  background-size: 12px 2px;
+  animation: pexFlow 1.4s linear infinite;
+}
+.pex-flow > *:last-child::after {
+  display: none;
+}
+@media (max-width: 639.98px) {
+  .pex-flow > *::after {
+    display: none;
+  }
+}
+@media (min-width: 640px) and (max-width: 1023.98px) {
+  .pex-flow > *:nth-child(2n)::after {
+    display: none;
+  }
+}
+@media (min-width: 1024px) {
+  .pex-flow > *:nth-child(3n)::after {
+    display: none;
+  }
+}
+@keyframes pexFlow {
+  to {
+    background-position: 12px 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pex-flow > *::after {
+    animation: none;
+  }
+}
+
+/* Bascule sombre : on redéfinit les jetons de couleur sur le conteneur du
+   module. Les utilitaires Tailwind lisent ces variables, la sous-arborescence
+   bascule donc d'un bloc. Les rares emplois du navy comme *fond* sont repris
+   explicitement — leur variable porte désormais un rôle de texte. */
+.pex-dark {
+  --color-paper: #0e1a2b;
+  --color-light: #16243a;
+  --color-line: #2c3d59;
+  --color-ink: #e6ecf5;
+  --color-grey: #9db0c9;
+  --color-navy: #dce6f5;
+  --color-royal: #7d9bec;
+  color: var(--color-ink);
+}
+.pex-dark .bg-navy {
+  background-color: #0a1424;
+}
+.pex-dark .bg-royal {
+  background-color: #2f4fa8;
+}
+.pex-dark .shadow-sm,
+.pex-dark .shadow-lg,
+.pex-dark .shadow-2xl {
+  --tw-shadow-color: rgb(0 0 0 / 0.6);
+}
+/* Le texte de l'or reste sombre : en mode sombre, `text-navy` porte une teinte
+   claire qui deviendrait illisible sur un aplat doré. */
+.pex-dark .bg-gold.text-navy {
+  color: #0a1424;
+}
+/* Bandeaux du panneau : les dégradés lisent des jetons dont le rôle s'inverse
+   en sombre — on les fixe par phase. */
+.pex-dark [data-phase="1"] {
+  background-image: linear-gradient(to bottom right, #2f4fa8, #0a1424);
+}
+.pex-dark [data-phase="2"] {
+  background-image: linear-gradient(to bottom right, #16305e, #070f1c);
+}
+.pex-dark [data-phase="3"] {
+  background-image: linear-gradient(to bottom right, #8a6300, #6b4c00);
 }

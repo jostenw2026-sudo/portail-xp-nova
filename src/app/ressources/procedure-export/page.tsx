@@ -39,7 +39,7 @@ export default function ProcedureExportPage() {
   return (
     <>
       <PageHero
-        eyebrow="Ressources · Publication technique"
+        eyebrow="Ressources · Guide officiel"
         title="La chaîne d'exportation agricole, étape par étape"
         lead={`${PROCEDURE_ETAPES.length} étapes, ${PROCEDURE_ACTEURS.length} intervenants et ${NB_DOCS} pièces documentaires — du champ jusqu'à l'entrepôt de l'acheteur : ce qu'il faut faire, qui l'exécute, quels documents sont produits, où la marchandise peut être bloquée — et le guichet camerounais à saisir.`}
       />

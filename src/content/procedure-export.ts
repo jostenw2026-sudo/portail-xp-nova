@@ -14,12 +14,24 @@ export type ActeurId =
   | 'douane'
   | 'acheteur';
 
+/** Pictogrammes disponibles (SVG maison, aucun jeu d’icônes externe). */
+export type IconeId =
+  | 'ble'
+  | 'microscope'
+  | 'carton'
+  | 'document'
+  | 'camion'
+  | 'colonnes'
+  | 'navire'
+  | 'passeport'
+  | 'boutique'
+  | 'bouclier';
+
 export interface ProcedureActeur {
   id: ActeurId;
   /** Libellé court des filtres et des lignes d’acteurs. */
   nom: string;
-  /** Initiales affichées dans les pastilles des cartes d’étape. */
-  sigle: string;
+  icone: IconeId;
   role: string;
 }
 
@@ -41,6 +53,7 @@ export interface ProcedureEtape {
   titre: string;
   sousTitre: string;
   phase: 1 | 2 | 3;
+  icone: IconeId;
   acteurs: { id: ActeurId; nom: string }[];
   description: string;
   actions: string[];
@@ -67,37 +80,37 @@ export const PROCEDURE_ACTEURS: ProcedureActeur[] = [
   {
     id: 'autorite',
     nom: 'Autorité phytosanitaire & services d’export',
-    sigle: 'AP',
+    icone: 'bouclier',
     role: 'Contrôle sanitaire, normalisation et délivrance des certificats officiels.',
   },
   {
     id: 'producteur',
     nom: 'Producteur, coopérative & station de conditionnement',
-    sigle: 'PC',
+    icone: 'ble',
     role: 'Production, traçabilité du lot, tri, calibrage et emballage aux normes.',
   },
   {
     id: 'transitaire',
     nom: 'Transitaire & logistique terrestre',
-    sigle: 'TL',
+    icone: 'camion',
     role: 'Constitution du dossier export, pré-acheminement et coordination des flux.',
   },
   {
     id: 'compagnie',
     nom: 'Compagnie maritime ou aérienne',
-    sigle: 'CM',
+    icone: 'navire',
     role: 'Réservation de fret, embarquement, titre de transport et suivi de la traversée.',
   },
   {
     id: 'douane',
     nom: 'Courtier en douane (origine & destination)',
-    sigle: 'CD',
+    icone: 'passeport',
     role: 'Déclarations douanières, droits et taxes, mainlevée des marchandises.',
   },
   {
     id: 'acheteur',
     nom: 'Agent d’importation & acheteur final',
-    sigle: 'AA',
+    icone: 'boutique',
     role: 'Réception, agréage contradictoire et clôture du dossier commercial.',
   },
 ];
@@ -108,6 +121,7 @@ export const PROCEDURE_ETAPES: ProcedureEtape[] = [
     titre: 'Approvisionnement & production',
     sousTitre: 'Récolte, traçabilité du lot et tri à la ferme',
     phase: 1,
+    icone: 'ble',
     acteurs: [
       { id: 'producteur', nom: 'Producteur / coopérative' },
       { id: 'autorite', nom: 'Autorité agricole / inspecteurs' },
@@ -136,6 +150,7 @@ export const PROCEDURE_ETAPES: ProcedureEtape[] = [
     titre: 'Normes de qualité & phytosanitaires',
     sousTitre: 'Inspections, résidus LMR et certificat',
     phase: 1,
+    icone: 'microscope',
     acteurs: [{ id: 'autorite', nom: 'Autorité d’export / service phytosanitaire' }],
     description:
       'Contrôle de conformité sanitaire et phytosanitaire par l’autorité compétente : vérification des limites maximales de résidus (LMR) de pesticides et absence d’organismes de quarantaine.',
@@ -162,6 +177,7 @@ export const PROCEDURE_ETAPES: ProcedureEtape[] = [
     titre: 'Conditionnement & emballage',
     sousTitre: 'Mise aux normes d’emballage du pays de destination',
     phase: 1,
+    icone: 'carton',
     acteurs: [
       { id: 'producteur', nom: 'Station / usine de conditionnement' },
       { id: 'autorite', nom: 'Organisme de normalisation' },
@@ -190,6 +206,7 @@ export const PROCEDURE_ETAPES: ProcedureEtape[] = [
     titre: 'Préparation des documents d’export',
     sousTitre: 'Dossier commercial et origine',
     phase: 2,
+    icone: 'document',
     acteurs: [
       { id: 'transitaire', nom: 'Transitaire (freight forwarder)' },
       { id: 'douane', nom: 'Courtier en douane / exportateur' },
@@ -219,6 +236,7 @@ export const PROCEDURE_ETAPES: ProcedureEtape[] = [
     titre: 'Transit & pré-acheminement',
     sousTitre: 'Camionnage frigorifique vers le port ou l’aéroport',
     phase: 2,
+    icone: 'camion',
     acteurs: [
       { id: 'transitaire', nom: 'Transporteur routier frigorifique' },
       { id: 'compagnie', nom: 'Gestionnaire de terminal portuaire' },
@@ -247,6 +265,7 @@ export const PROCEDURE_ETAPES: ProcedureEtape[] = [
     titre: 'Dédouanement à l’origine',
     sousTitre: 'Déclaration d’exportation et contrôle douanier',
     phase: 2,
+    icone: 'colonnes',
     acteurs: [
       { id: 'douane', nom: 'Douanes du pays exportateur' },
       { id: 'autorite', nom: 'Autorité de contrôle des exportations' },
@@ -275,6 +294,7 @@ export const PROCEDURE_ETAPES: ProcedureEtape[] = [
     titre: 'Expédition internationale',
     sousTitre: 'Traversée maritime ou aérienne sous froid',
     phase: 3,
+    icone: 'navire',
     acteurs: [
       { id: 'compagnie', nom: 'Compagnie maritime / aérienne' },
       { id: 'transitaire', nom: 'Agent maritime / transit' },
@@ -303,6 +323,7 @@ export const PROCEDURE_ETAPES: ProcedureEtape[] = [
     titre: 'Dédouanement à destination',
     sousTitre: 'Inspection sanitaire d’import, droits et taxes',
     phase: 3,
+    icone: 'passeport',
     acteurs: [
       { id: 'douane', nom: 'Douanes du pays importateur' },
       { id: 'acheteur', nom: 'Agent d’importation / courtier local' },
@@ -332,6 +353,7 @@ export const PROCEDURE_ETAPES: ProcedureEtape[] = [
     titre: 'Livraison à l’acheteur',
     sousTitre: 'Acheminement final et agréage',
     phase: 3,
+    icone: 'boutique',
     acteurs: [
       { id: 'acheteur', nom: 'Acheteur final / grossiste / distribution' },
       { id: 'transitaire', nom: 'Transporteur routier local' },

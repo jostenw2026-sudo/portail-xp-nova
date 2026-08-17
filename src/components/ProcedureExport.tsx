@@ -3,16 +3,20 @@
 /**
  * Procédure d'exportation agricole — vue interactive (3 onglets).
  *
- * 1. Étapes    : les 9 étapes réparties en 3 phases, filtrables par acteur ;
+ * 1. Étapes    : les 9 étapes réparties en 3 phases, reliées par la ligne de
+ *                flux, filtrables par acteur ;
  * 2. Acteurs   : la matrice des responsabilités, une ligne par intervenant ;
  * 3. Documents : la checklist des 18 pièces, cochable et imprimable.
  *
  * Le détail d'une étape s'ouvre dans un panneau latéral (précédent / suivant,
- * fermeture par Échap). Tokens de la charte : navy · royal · gold.
+ * fermeture par Échap). Une bascule clair / sombre s'applique au seul module.
+ * Tokens de la charte : navy · royal · gold. Pictogrammes SVG maison ;
+ * ligne de flux et bascule sombre dans `globals.css`.
  */
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Callout } from "./ui";
+import { ProcedureIcone } from "./ProcedureIcones";
 import {
   PROCEDURE_ACTEURS,
   PROCEDURE_ETAPES,
@@ -33,12 +37,25 @@ const VUES: { id: Vue; label: string }[] = [
   { id: "documents", label: "Dossier documentaire" },
 ];
 
-// Repère de phase porté par la pastille numérotée et l'étiquette, pas par un
-// filet de couleur. Classes écrites en entier pour rester détectables par Tailwind.
+// Repère de phase porté par la pastille, l'étiquette et le bandeau du panneau.
+// Classes écrites en entier pour rester détectables par Tailwind.
 const PHASE: Record<1 | 2 | 3, { puce: string; chip: string; bandeau: string }> = {
-  1: { puce: "bg-royal text-white", chip: "bg-royal/10 text-royal", bandeau: "bg-royal" },
-  2: { puce: "bg-navy text-white", chip: "bg-navy/10 text-navy", bandeau: "bg-navy" },
-  3: { puce: "bg-gold text-navy", chip: "bg-gold/15 text-navy", bandeau: "bg-gold" },
+  1: {
+    puce: "bg-royal text-white",
+    chip: "bg-royal/10 text-royal",
+    bandeau: "bg-gradient-to-br from-royal to-navy",
+  },
+  2: {
+    puce: "bg-navy text-white",
+    chip: "bg-navy/10 text-navy",
+    bandeau: "bg-gradient-to-br from-navy to-ink",
+  },
+  3: {
+    puce: "bg-gold text-navy",
+    chip: "bg-gold/15 text-navy",
+    // Or profond en départ : le gold clair ne porte pas du texte blanc.
+    bandeau: "bg-gradient-to-br from-gold-deep to-gold",
+  },
 };
 
 const DOCUMENTS = tousLesDocuments();
@@ -47,9 +64,14 @@ function concerne(etape: ProcedureEtape, filtre: Filtre): boolean {
   return filtre === "tous" || etape.acteurs.some((a) => a.id === filtre);
 }
 
+function acteur(id: ActeurId) {
+  return PROCEDURE_ACTEURS.find((a) => a.id === id);
+}
+
 export default function ProcedureExport() {
   const [vue, setVue] = useState<Vue>("etapes");
   const [filtre, setFiltre] = useState<Filtre>("tous");
+  const [sombre, setSombre] = useState(false);
   const [etapeOuverte, setEtapeOuverte] = useState<number | null>(null);
   const [cochees, setCochees] = useState<Record<string, boolean>>({});
   const panneauRef = useRef<HTMLDivElement>(null);
@@ -57,6 +79,7 @@ export default function ProcedureExport() {
   const etape = etapeOuverte ? (PROCEDURE_ETAPES.find((e) => e.id === etapeOuverte) ?? null) : null;
   const nbConcernees = PROCEDURE_ETAPES.filter((e) => concerne(e, filtre)).length;
   const nbCochees = DOCUMENTS.filter((d) => cochees[d.code]).length;
+  const razPossible = filtre !== "tous" || nbCochees > 0;
 
   const fermer = useCallback(() => setEtapeOuverte(null), []);
   const naviguer = useCallback((sens: -1 | 1) => {
@@ -68,6 +91,12 @@ export default function ProcedureExport() {
       return suivant;
     });
   }, []);
+
+  /** Remet la vue à zéro : plus de filtre, plus de case cochée. */
+  const raz = () => {
+    setFiltre("tous");
+    setCochees({});
+  };
 
   useEffect(() => {
     if (!etape) return;
@@ -96,27 +125,48 @@ export default function ProcedureExport() {
     window.setTimeout(nettoyer, 1500);
   };
 
+  const chip = (actif: boolean) =>
+    `inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-sm font-semibold transition-colors ${
+      actif ? "border-gold bg-gold text-navy" : "border-line bg-paper text-navy hover:border-gold"
+    }`;
+
   return (
-    <div>
-      {/* ── Onglets + filtre ── */}
+    <div className={sombre ? "pex-dark rounded-lg p-5 -m-1" : ""}>
+      {/* ── Onglets, thème, filtre ── */}
       <div className="print:hidden">
-        <div role="tablist" aria-label="Vues de la procédure" className="flex flex-wrap gap-1 rounded-lg border border-line bg-light p-1.5">
-          {VUES.map((v) => (
-            <button
-              key={v.id}
-              type="button"
-              role="tab"
-              id={`pex-tab-${v.id}`}
-              aria-selected={vue === v.id}
-              aria-controls={`pex-panel-${v.id}`}
-              onClick={() => setVue(v.id)}
-              className={`flex-1 rounded-md px-4 py-2.5 text-base font-semibold transition-colors ${
-                vue === v.id ? "bg-paper text-navy shadow-sm" : "text-grey hover:text-navy"
-              }`}
-            >
-              {v.label}
-            </button>
-          ))}
+        <div className="flex flex-wrap items-center gap-4">
+          <div
+            role="tablist"
+            aria-label="Vues de la procédure"
+            className="flex flex-1 flex-wrap gap-1 rounded-lg border border-line bg-light p-1.5"
+          >
+            {VUES.map((v) => (
+              <button
+                key={v.id}
+                type="button"
+                role="tab"
+                id={`pex-tab-${v.id}`}
+                aria-selected={vue === v.id}
+                aria-controls={`pex-panel-${v.id}`}
+                onClick={() => setVue(v.id)}
+                className={`flex-1 rounded-md px-4 py-2.5 text-base font-semibold transition-colors ${
+                  vue === v.id ? "bg-paper text-navy shadow-sm" : "text-grey hover:text-navy"
+                }`}
+              >
+                {v.label}
+              </button>
+            ))}
+          </div>
+          <button
+            type="button"
+            aria-pressed={sombre}
+            onClick={() => setSombre((v) => !v)}
+            title="Basculer l'affichage de la procédure en clair ou en sombre"
+            className="inline-flex items-center gap-2 rounded-md border border-line bg-paper px-4 py-2.5 text-sm font-semibold text-navy transition-colors hover:border-gold"
+          >
+            <span aria-hidden>{sombre ? "☀" : "☾"}</span>
+            {sombre ? "Affichage clair" : "Affichage sombre"}
+          </button>
         </div>
 
         {vue !== "documents" && (
@@ -124,16 +174,12 @@ export default function ProcedureExport() {
             <p id="pex-filtre-label" className="eyebrow mb-2">
               Filtrer par acteur
             </p>
-            <div role="group" aria-labelledby="pex-filtre-label" className="flex flex-wrap gap-2">
+            <div role="group" aria-labelledby="pex-filtre-label" className="flex flex-wrap items-center gap-2">
               <button
                 type="button"
                 aria-pressed={filtre === "tous"}
                 onClick={() => setFiltre("tous")}
-                className={`rounded-full border px-3.5 py-1.5 text-sm font-semibold transition-colors ${
-                  filtre === "tous"
-                    ? "border-gold bg-gold text-navy"
-                    : "border-line bg-paper text-navy hover:border-gold"
-                }`}
+                className={chip(filtre === "tous")}
               >
                 Tous les intervenants ({PROCEDURE_ACTEURS.length})
               </button>
@@ -143,15 +189,20 @@ export default function ProcedureExport() {
                   type="button"
                   aria-pressed={filtre === a.id}
                   onClick={() => setFiltre(a.id)}
-                  className={`rounded-full border px-3.5 py-1.5 text-sm font-semibold transition-colors ${
-                    filtre === a.id
-                      ? "border-gold bg-gold text-navy"
-                      : "border-line bg-paper text-navy hover:border-gold"
-                  }`}
+                  className={chip(filtre === a.id)}
                 >
+                  <ProcedureIcone nom={a.icone} taille={16} />
                   {a.nom}
                 </button>
               ))}
+              <button
+                type="button"
+                onClick={raz}
+                disabled={!razPossible}
+                className="rounded-full border border-dashed border-line px-3.5 py-1.5 text-sm font-bold text-grey transition-colors hover:text-navy disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                RAZ
+              </button>
             </div>
             <p className="mt-3 text-sm text-grey" aria-live="polite">
               <b className="text-navy">{nbConcernees}</b> étape{nbConcernees > 1 ? "s" : ""} sur{" "}
@@ -181,7 +232,7 @@ export default function ProcedureExport() {
             ))}
           </ol>
 
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="pex-flow grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {PROCEDURE_ETAPES.map((e) => {
               const actif = concerne(e, filtre);
               return (
@@ -201,19 +252,22 @@ export default function ProcedureExport() {
                       Phase {e.phase}
                     </span>
                   </span>
+                  <span className={`mt-1 grid h-10 w-10 place-items-center rounded-md ${PHASE[e.phase].chip}`}>
+                    <ProcedureIcone nom={e.icone} taille={22} />
+                  </span>
                   <span className="font-display text-lg font-bold leading-snug text-navy">{e.titre}</span>
                   <span className="text-sm text-grey">{e.sousTitre}</span>
                   <span className="mt-auto flex items-center justify-between gap-3 border-t border-line pt-3">
-                    <span className="flex gap-1">
+                    <span className="flex gap-1.5">
                       {e.acteurs.map((a) => {
-                        const ref = PROCEDURE_ACTEURS.find((x) => x.id === a.id);
+                        const ref = acteur(a.id);
                         return (
                           <span
                             key={a.id}
                             title={ref?.nom ?? a.nom}
-                            className="grid h-6 w-6 place-items-center rounded-full border border-line bg-light text-[10px] font-bold text-navy"
+                            className="grid h-7 w-7 place-items-center rounded-full border border-line bg-light text-navy"
                           >
-                            {ref?.sigle ?? "?"}
+                            <ProcedureIcone nom={ref?.icone ?? "bouclier"} taille={15} />
                           </span>
                         );
                       })}
@@ -241,8 +295,8 @@ export default function ProcedureExport() {
                 }`}
               >
                 <div className="flex items-start gap-3">
-                  <span className="grid h-10 w-10 shrink-0 place-items-center rounded-md bg-navy text-sm font-bold text-gold">
-                    {a.sigle}
+                  <span className="grid h-11 w-11 shrink-0 place-items-center rounded-md bg-navy text-gold">
+                    <ProcedureIcone nom={a.icone} taille={22} />
                   </span>
                   <span>
                     <b className="block leading-snug text-navy">{a.nom}</b>
@@ -263,6 +317,7 @@ export default function ProcedureExport() {
                       <span className={`rounded px-1.5 py-0.5 text-[11px] font-bold ${PHASE[e.phase].puce}`}>
                         {String(e.id).padStart(2, "0")}
                       </span>
+                      <ProcedureIcone nom={e.icone} taille={16} />
                       {e.titre}
                     </button>
                   ))}
@@ -365,7 +420,7 @@ export default function ProcedureExport() {
 
       {/* ── Panneau de détail ── */}
       {etape && (
-        <div className="fixed inset-0 z-50 print:hidden">
+        <div className={`fixed inset-0 z-50 print:hidden ${sombre ? "pex-dark" : ""}`}>
           <button
             type="button"
             aria-label="Fermer le détail de l'étape"
@@ -380,15 +435,23 @@ export default function ProcedureExport() {
             tabIndex={-1}
             className="absolute inset-y-0 right-0 flex w-full max-w-xl flex-col bg-paper shadow-2xl"
           >
-            <div className={`flex items-start justify-between gap-3 p-6 text-white ${PHASE[etape.phase].bandeau}`}>
-              <div>
-                <span className="inline-block rounded-full bg-white/20 px-2.5 py-1 text-xs font-bold uppercase tracking-wide">
-                  Étape {String(etape.id).padStart(2, "0")} · Phase {etape.phase}
+            <div
+              data-phase={etape.phase}
+              className={`flex items-start justify-between gap-3 p-6 text-white ${PHASE[etape.phase].bandeau}`}
+            >
+              <div className="flex items-start gap-4">
+                <span className="mt-1 grid h-12 w-12 shrink-0 place-items-center rounded-md bg-white/20">
+                  <ProcedureIcone nom={etape.icone} taille={24} />
                 </span>
-                <h2 id="pex-drawer-title" className="title-2 mt-3 !text-white">
-                  {etape.titre}
-                </h2>
-                <p className="mt-1 text-sm text-white/85">{etape.sousTitre}</p>
+                <div>
+                  <span className="inline-block rounded-full bg-white/20 px-2.5 py-1 text-xs font-bold uppercase tracking-wide">
+                    Étape {String(etape.id).padStart(2, "0")} · Phase {etape.phase}
+                  </span>
+                  <h2 id="pex-drawer-title" className="title-2 mt-3 !text-white">
+                    {etape.titre}
+                  </h2>
+                  <p className="mt-1 text-sm text-white/85">{etape.sousTitre}</p>
+                </div>
               </div>
               <button
                 type="button"
@@ -423,8 +486,9 @@ export default function ProcedureExport() {
                   {etape.acteurs.map((a) => (
                     <span
                       key={a.id}
-                      className="rounded-md border border-line bg-light px-3 py-1.5 text-sm font-semibold text-navy"
+                      className="inline-flex items-center gap-2 rounded-md border border-line bg-light px-3 py-1.5 text-sm font-semibold text-navy"
                     >
+                      <ProcedureIcone nom={acteur(a.id)?.icone ?? "bouclier"} taille={15} />
                       {a.nom}
                     </span>
                   ))}
