@@ -646,13 +646,15 @@ export const ressourcesEn: (Ressource & { typeLabel: string })[] = [
     docStatus: "public",
   },
   {
-    key: "referentiel-pacte",
-    title: "PACTE framework",
+    // Aligned on the AgroVita doctrine — see the French file for the rationale.
+    key: "referentiel-pte-r",
+    title: "PTE-R framework",
     type: "Publication",
     typeLabel: "Publication",
-    desc: "The PACTE model: Produce · Aggregate · Commercialise · Transform · Export.",
+    desc:
+      "The PTE-R model: Produce for Demand · Transform for Value · Export for Impact · Resist for the Long Run.",
     acces: "sur-demande",
-    docStatus: "public",
+    docStatus: "a-paraitre",
   },
   {
     key: "cv-experts",

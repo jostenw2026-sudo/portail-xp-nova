@@ -41,12 +41,24 @@ export const ressources: Ressource[] = [
     docStatus: "public",
   },
   {
-    key: "referentiel-pacte",
-    title: "Référentiel PACTE",
+    // Aligné sur la doctrine AgroVita (19/08/2026). Le modèle PACTE — Produire ·
+    // Agréger · Commercialiser · Transformer · Exporter — est remplacé par
+    // PTE-R : deux modèles doctrinaux ne peuvent pas coexister sur deux sites
+    // du même groupe. « Agréger » et « Commercialiser » n'étaient pas des
+    // piliers mais des modes opératoires ; ils restent portés par le parcours
+    // (E6 — Vendre) et par les familles d'acteurs.
+    //
+    // `docStatus` repasse à "a-paraitre" : le document PACTE existant ne
+    // correspond plus au titre annoncé, et le référentiel PTE-R reste à
+    // produire. Annoncer « demandable » un document inexistant exposerait la
+    // même incohérence que celle corrigée sur AgroVita (INC-B-10).
+    key: "referentiel-pte-r",
+    title: "Référentiel PTE-R",
     type: "Publication",
-    desc: "Le modèle PACTE : Produire · Agréger · Commercialiser · Transformer · Exporter.",
+    desc:
+      "Le modèle PTE-R : Produire pour la Demande · Transformer pour la Valeur · Exporter pour l'Impact · Résister pour la Durée.",
     acces: "sur-demande",
-    docStatus: "public",
+    docStatus: "a-paraitre",
   },
   {
     key: "cv-experts",
