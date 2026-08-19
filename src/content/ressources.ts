@@ -22,7 +22,7 @@ export const ressources: Ressource[] = [
     type: "Profil",
     desc: "Présentation synthétique (2-4 pages) : métiers, références, atouts. Pour prises de contact et préqualifications.",
     acces: "sur-demande",
-    docStatus: "public",
+    docStatus: "a-paraitre",
   },
   {
     key: "company-profile",
@@ -30,7 +30,7 @@ export const ressources: Ressource[] = [
     type: "Profil",
     desc: "Présentation institutionnelle complète : vision, histoire, métiers, méthode, équipe, références, gouvernance.",
     acces: "sur-demande",
-    docStatus: "public",
+    docStatus: "a-paraitre",
   },
   {
     key: "referentiel-methodologique",
@@ -38,15 +38,27 @@ export const ressources: Ressource[] = [
     type: "Publication",
     desc: "La méthode XP-NOVA en 6 phases, détaillée avec ses livrables.",
     acces: "sur-demande",
-    docStatus: "public",
+    docStatus: "a-paraitre",
   },
   {
-    key: "referentiel-pacte",
-    title: "Référentiel PACTE",
+    // Aligné sur la doctrine AgroVita (19/08/2026). Le modèle PACTE — Produire ·
+    // Agréger · Commercialiser · Transformer · Exporter — est remplacé par
+    // PTE-R : deux modèles doctrinaux ne peuvent pas coexister sur deux sites
+    // du même groupe. « Agréger » et « Commercialiser » n'étaient pas des
+    // piliers mais des modes opératoires ; ils restent portés par le parcours
+    // (E6 — Vendre) et par les familles d'acteurs.
+    //
+    // `docStatus` repasse à "a-paraitre" : le document PACTE existant ne
+    // correspond plus au titre annoncé, et le référentiel PTE-R reste à
+    // produire. Annoncer « demandable » un document inexistant exposerait la
+    // même incohérence que celle corrigée sur AgroVita (INC-B-10).
+    key: "referentiel-pte-r",
+    title: "Référentiel PTE-R",
     type: "Publication",
-    desc: "Le modèle PACTE : Produire · Agréger · Commercialiser · Transformer · Exporter.",
+    desc:
+      "Le modèle PTE-R : Produire pour la Demande · Transformer pour la Valeur · Exporter pour l'Impact · Résister pour la Durée.",
     acces: "sur-demande",
-    docStatus: "public",
+    docStatus: "a-paraitre",
   },
   {
     key: "cv-experts",
@@ -54,7 +66,7 @@ export const ressources: Ressource[] = [
     type: "Profil",
     desc: "CV standardisés conformes aux exigences des bailleurs, transmis sur demande motivée.",
     acces: "sur-demande",
-    docStatus: "public",
+    docStatus: "a-paraitre",
   },
   {
     key: "dossier-administratif",
@@ -62,6 +74,6 @@ export const ressources: Ressource[] = [
     type: "Publication",
     desc: "Pièces administratives et de conformité, transmises sur demande dans le cadre d'une procédure.",
     acces: "sur-demande",
-    docStatus: "public",
+    docStatus: "a-paraitre",
   },
 ];

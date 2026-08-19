@@ -64,6 +64,27 @@ export default function MethodePage() {
             </li>
           ))}
         </ol>
+
+        {/* Articulation BIC / AGROVITA — option A de ARBITRAGE-METHODE-BIC-AGROVITA.md.
+            Une doctrine commune, deux parcours : le dire plutôt que de le laisser
+            deviner à qui passe d'un site à l'autre. */}
+        <aside className="mt-10 rounded-lg border border-line bg-light p-6">
+          <p className="text-ink/90">
+            Cette méthode s&apos;applique à tous nos domaines d&apos;intervention. Elle repose sur
+            la doctrine <strong className="text-navy">PTE-R</strong>{' '}— produire pour la demande,
+            transformer pour la valeur, exporter pour l&apos;impact, résister pour la durée. Pour
+            les projets agricoles, d&apos;élevage et agro-industriels, elle se décline en un
+            parcours jalonné de sept étapes, de la préqualification de l&apos;idée au contrat
+            signé, sur{" "}
+            <a
+              href="https://agrovita.xp-nova.com/methode"
+              className="font-semibold text-royal underline underline-offset-2 hover:text-navy"
+            >
+              agrovita.xp-nova.com
+            </a>
+            .
+          </p>
+        </aside>
       </Section>
 
       <CTABanner />

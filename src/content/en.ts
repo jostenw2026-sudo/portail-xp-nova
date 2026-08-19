@@ -625,7 +625,7 @@ export const ressourcesEn: (Ressource & { typeLabel: string })[] = [
     typeLabel: "Profile",
     desc: "A concise 2–4 page overview: practices, references, strengths. For first contacts and pre-qualifications.",
     acces: "sur-demande",
-    docStatus: "public",
+    docStatus: "a-paraitre",
   },
   {
     key: "company-profile",
@@ -634,7 +634,7 @@ export const ressourcesEn: (Ressource & { typeLabel: string })[] = [
     typeLabel: "Profile",
     desc: "Full institutional presentation: vision, history, practices, method, team, references, governance.",
     acces: "sur-demande",
-    docStatus: "public",
+    docStatus: "a-paraitre",
   },
   {
     key: "referentiel-methodologique",
@@ -643,16 +643,18 @@ export const ressourcesEn: (Ressource & { typeLabel: string })[] = [
     typeLabel: "Publication",
     desc: "The XP-NOVA method in 6 phases, detailed with its deliverables.",
     acces: "sur-demande",
-    docStatus: "public",
+    docStatus: "a-paraitre",
   },
   {
-    key: "referentiel-pacte",
-    title: "PACTE framework",
+    // Aligned on the AgroVita doctrine — see the French file for the rationale.
+    key: "referentiel-pte-r",
+    title: "PTE-R framework",
     type: "Publication",
     typeLabel: "Publication",
-    desc: "The PACTE model: Produce · Aggregate · Commercialise · Transform · Export.",
+    desc:
+      "The PTE-R model: Produce for Demand · Transform for Value · Export for Impact · Resist for the Long Run.",
     acces: "sur-demande",
-    docStatus: "public",
+    docStatus: "a-paraitre",
   },
   {
     key: "cv-experts",
@@ -661,7 +663,7 @@ export const ressourcesEn: (Ressource & { typeLabel: string })[] = [
     typeLabel: "Profile",
     desc: "Standardised CVs compliant with development-partner requirements, shared on justified request.",
     acces: "sur-demande",
-    docStatus: "public",
+    docStatus: "a-paraitre",
   },
   {
     key: "dossier-administratif",
@@ -670,6 +672,6 @@ export const ressourcesEn: (Ressource & { typeLabel: string })[] = [
     typeLabel: "Publication",
     desc: "Administrative and compliance documents, shared on request within a procurement procedure.",
     acces: "sur-demande",
-    docStatus: "public",
+    docStatus: "a-paraitre",
   },
 ];
