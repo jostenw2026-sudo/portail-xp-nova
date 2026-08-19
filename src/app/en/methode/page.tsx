@@ -62,6 +62,24 @@ export default function MethodePageEn() {
             </li>
           ))}
         </ol>
+
+        {/* Articulation BIC / AGROVITA — voir la version française. */}
+        <aside className="mt-10 rounded-lg border border-line bg-light p-6">
+          <p className="text-ink/90">
+            This method applies across all our fields of intervention. It rests on the{" "}
+            <strong className="text-navy">PTE-R</strong> doctrine — produce for demand, transform
+            for value, export for impact, resist for the long run. For agricultural, livestock and
+            agri-industrial projects, it is set out as a seven-milestone journey, from
+            pre-qualifying the idea to the signed contract, on{" "}
+            <a
+              href="https://agrovita.xp-nova.com/en/methode"
+              className="font-semibold text-royal underline underline-offset-2 hover:text-navy"
+            >
+              agrovita.xp-nova.com
+            </a>
+            .
+          </p>
+        </aside>
       </Section>
 
       <CTABanner lang="en" />
