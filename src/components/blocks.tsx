@@ -213,3 +213,38 @@ export function PageHero({
     </section>
   );
 }
+
+// Bandeau AGROBOUSSOLE — passerelle du portail vers le seul produit en libre-service
+// du groupe. Il vit sur agrovita.xp-nova.com, un autre domaine : le lien est donc
+// externe et s'ouvre dans un nouvel onglet, comme les deux pôles du hero.
+const AGROBOUSSOLE_URL = "https://agrovita.xp-nova.com/ressources/agroboussole";
+
+export function AgroBoussoleBand({ lang = "fr" }: { lang?: Lang }) {
+  const en = lang === "en";
+  return (
+    <div className="border-y border-line bg-paper">
+      <div className="container-x flex flex-col gap-6 py-10 md:flex-row md:items-center md:justify-between">
+        <div className="max-w-2xl">
+          <p className="eyebrow mb-2 text-royal">
+            {en ? "Self-service · AGROVITA" : "En libre-service · AGROVITA"}
+          </p>
+          <h2 className="title-2 text-navy">
+            {en
+              ? "AGROBOUSSOLE — is your agricultural idea mature enough to become a project?"
+              : "AGROBOUSSOLE — votre idée agricole est-elle assez mûre pour devenir un projet ?"}
+          </h2>
+          <p className="mt-3 text-grey">
+            {en
+              ? "A free mini-assessment: your maturity score out of 100 and your exposure index, in a few minutes. The full opinion, reviewed by an XP-NOVA engineer, is delivered within 48 hours."
+              : "Une mini-évaluation gratuite : votre score de maturité sur 100 et votre indice d’exposition, en quelques minutes. L’avis complet, relu par un ingénieur XP-NOVA, est remis sous 48 h."}
+          </p>
+        </div>
+        <div className="shrink-0">
+          <Button href={AGROBOUSSOLE_URL} variant="primary" external>
+            {en ? "Assess my idea — free" : "Évaluer mon idée — gratuit"}
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}

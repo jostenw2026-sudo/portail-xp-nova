@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Hero from "@/components/Hero";
 import { Section, SectionTitle, Button } from "@/components/ui";
 import { CardMetier, EcosystemBlock } from "@/components/cards";
-import { StatsBar, ProcessTimeline, Trajectoire, Pillars, CTABanner } from "@/components/blocks";
+import { StatsBar, ProcessTimeline, Trajectoire, Pillars, CTABanner, AgroBoussoleBand } from "@/components/blocks";
 import { metiersEn } from "@/content/en";
 import VideoPresentation from "@/components/VideoPresentation";
 
@@ -27,6 +27,7 @@ export default function HomeEn() {
     <>
       <Hero lang="en" />
       <StatsBar tone="light" lang="en" />
+      <AgroBoussoleBand lang="en" />
 
       <VideoPresentation lang="en" />
 

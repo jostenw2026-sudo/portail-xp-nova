@@ -1,7 +1,7 @@
 import Hero from "@/components/Hero";
 import { Section, SectionTitle, Button } from "@/components/ui";
 import { CardMetier, EcosystemBlock } from "@/components/cards";
-import { StatsBar, ProcessTimeline, Trajectoire, Pillars, CTABanner } from "@/components/blocks";
+import { StatsBar, ProcessTimeline, Trajectoire, Pillars, CTABanner, AgroBoussoleBand } from "@/components/blocks";
 import { metiers } from "@/content/metiers";
 import VideoPresentation from "@/components/VideoPresentation";
 
@@ -20,6 +20,7 @@ export default function Home() {
     <>
       <Hero />
       <StatsBar tone="light" />
+      <AgroBoussoleBand />
 
       <VideoPresentation />
 
