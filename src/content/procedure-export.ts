@@ -6,6 +6,21 @@
  * Contenu repris du guide interne « Chaîne logistique d’exportation agricole ».
  */
 
+/**
+ * CDC-AGV-2026-V1.0 § 8.1 — les huit axes de la procédure d’exportation, pour
+ * le filtrage du plan de démarrage et des fiches acteur/filière. Même forme que
+ * `AxesRessource` (lib/ressources.ts), déclarée ici sans import pour que ce
+ * module reste identique dans les deux dépôts (agrovita et portail).
+ */
+export const AXES_PROCEDURE_EXPORT = {
+  etapes: ['E6'],
+  familles: ['F1', 'F2', 'F4'],
+  filieres: ['*'],
+  typesProduit: ['TP01', 'TP02', 'TP03', 'TP04', 'TP05'],
+  stades: ['ST7'],
+  acces: 'libre' as const,
+};
+
 export type ActeurId =
   | 'autorite'
   | 'producteur'
