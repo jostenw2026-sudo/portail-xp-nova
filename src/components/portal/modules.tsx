@@ -234,3 +234,19 @@ export function LibraryLink() {
     </Link>
   );
 }
+
+/**
+ * Alias vers l'administration AGROVITA (agrovita.xp-nova.com/admin) — décision
+ * du 30/08/2026 : le panneau reste sur AGROVITA, avec sa propre authentification ;
+ * ce lien passe par /portail/admin, qui exige le rôle admin avant de renvoyer.
+ */
+export function AgrovitaAdminLink() {
+  return (
+    <Link
+      href="/portail/admin"
+      className="inline-flex items-center gap-2 rounded-md border border-navy px-4 py-2 text-sm font-semibold text-navy no-underline transition-colors hover:bg-navy hover:text-white"
+    >
+      🛠️ Administration AGROVITA
+    </Link>
+  );
+}

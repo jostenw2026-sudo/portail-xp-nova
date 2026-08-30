@@ -12,6 +12,7 @@ import {
   AdminLeads,
   AdminProjects,
   LibraryLink,
+  AgrovitaAdminLink,
 } from "./modules";
 
 /** Bandeau « connecté en tant que … » + déconnexion (form POST, sans JS). */
@@ -67,7 +68,10 @@ export function RoleDashboard({ session }: { session: PortalSession }) {
           <h1 className="title-1 gold-rule text-navy">{m.title}</h1>
           <p className="mt-3 max-w-2xl text-lg text-grey">{m.intro}</p>
         </div>
-        {role !== "invite" && <LibraryLink />}
+        <div className="flex flex-wrap gap-3">
+          {role !== "invite" && <LibraryLink />}
+          {role === "admin" && <AgrovitaAdminLink />}
+        </div>
       </div>
 
       {role === "client" && (
