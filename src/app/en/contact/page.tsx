@@ -42,7 +42,7 @@ export default function ContactPageEn() {
             <p className="text-sm text-grey">
               {site.legalName} · {site.legal.forme}
               <br />
-              RCCM {site.legal.rccm} · NIU {site.legal.niu}
+              CNPS {site.legal.cnps} · RCCM {site.legal.rccm} · NIU {site.legal.niu}
             </p>
           </aside>
         </div>

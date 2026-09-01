@@ -100,8 +100,8 @@ export default function Footer() {
       <div className="border-t border-white/15">
         <div className="container-x py-5 flex flex-col sm:flex-row gap-2 justify-between text-xs text-white/55">
           <p>
-            © {new Date().getFullYear()} {site.legalName} — {site.legal.forme}, {en ? "capital" : "capital"}{" "}
-            {site.legal.capital} · RCCM {site.legal.rccm} · NIU {site.legal.niu}
+            © {new Date().getFullYear()} {site.legalName} — {site.legal.forme} {en ? "with a capital of" : "au capital de"}{" "}
+            {site.legal.capital} · CNPS {site.legal.cnps} · RCCM {site.legal.rccm} · NIU {site.legal.niu}
           </p>
           <p className="flex gap-4">
             <Link href={en ? "/mentions-legales" : "/mentions-legales"} className="text-white/55 hover:text-gold no-underline">

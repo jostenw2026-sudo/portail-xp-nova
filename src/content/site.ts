@@ -21,10 +21,11 @@ export const site = {
   address: "134, Rue 1813, Vallée Bastos — B.P. 5603, Nlongkak, Yaoundé, Cameroun",
   responsePromise: "48 h",
   legal: {
-    forme: "SARL pluripersonnelle",
+    forme: "SARL",
     capital: "10 000 000 FCFA",
-    rccm: "RC/YAO/2006/B/945",
-    niu: "M01060001983W",
+    cnps: "321-0105061-A",
+    rccm: "RC/YAO/2006/B/945 (modif. RC/YAO/2026/M/354)",
+    niu: "M010600019838W",
   },
   proofStats: [
     { value: "7", label: "métiers d'ingénierie" },

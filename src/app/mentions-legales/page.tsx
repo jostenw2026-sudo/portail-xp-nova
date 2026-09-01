@@ -25,7 +25,7 @@ export default function MentionsPage() {
             <br />
             Siège social : {site.address}
             <br />
-            RCCM : {site.legal.rccm} · NIU : {site.legal.niu}
+            CNPS : {site.legal.cnps} · RCCM : {site.legal.rccm} · NIU : {site.legal.niu}
             <br />
             Téléphone : {site.phone} · E-mail : {site.email}
           </p>

@@ -102,7 +102,7 @@ export default function CabinetPageEn() {
           </p>
         </div>
         <Callout title="Legal identity" variant="navy">
-          {site.legalName} · {site.legal.forme} · Capital {site.legal.capital} · RCCM {site.legal.rccm}{" "}
+          {site.legalName} · {site.legal.forme} · Capital {site.legal.capital} · CNPS {site.legal.cnps} · RCCM {site.legal.rccm}{" "}
           · NIU {site.legal.niu} · Registered office: {site.address}
         </Callout>
       </Section>

@@ -104,7 +104,7 @@ export default function CabinetPage() {
           </p>
         </div>
         <Callout title="Identité légale" variant="navy">
-          {site.legalName} · {site.legal.forme} · Capital {site.legal.capital} · RCCM {site.legal.rccm}{" "}
+          {site.legalName} · {site.legal.forme} · Capital {site.legal.capital} · CNPS {site.legal.cnps} · RCCM {site.legal.rccm}{" "}
           · NIU {site.legal.niu} · Siège : {site.address}
         </Callout>
       </Section>
