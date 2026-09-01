@@ -21,7 +21,7 @@ export const organizationLd = {
   description: site.description,
   address: {
     "@type": "PostalAddress",
-    streetAddress: "134, Rue 1813, Vallée Bastos",
+    streetAddress: "134, Rue 1813, Vallée Bastos", postOfficeBoxNumber: "B.P. 5603",
     addressLocality: site.city,
     addressCountry: "CM",
   },

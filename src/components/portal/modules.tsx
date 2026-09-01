@@ -250,3 +250,18 @@ export function AgrovitaAdminLink() {
     </Link>
   );
 }
+
+/**
+ * Lien vers la saisie terrain (/portail/terrain) — affiché aux profils qui y
+ * ont droit. La page revérifie le rôle : ce lien est un raccourci, pas une garde.
+ */
+export function TerrainLink() {
+  return (
+    <Link
+      href="/portail/terrain"
+      className="inline-flex items-center gap-2 rounded-md bg-gold-deep px-4 py-2 text-sm font-semibold text-white no-underline transition-colors hover:bg-navy"
+    >
+      📋 Saisir un prospect
+    </Link>
+  );
+}

@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { roleLabels, type PortalRole } from "@/lib/portal/roles";
+import { roleLabels, rolesTerrain, type PortalRole } from "@/lib/portal/roles";
 import type { PortalSession } from "@/lib/portal/session";
 import {
   ClientProjects,
@@ -13,6 +13,7 @@ import {
   AdminProjects,
   LibraryLink,
   AgrovitaAdminLink,
+  TerrainLink,
 } from "./modules";
 
 /** Bandeau « connecté en tant que … » + déconnexion (form POST, sans JS). */
@@ -69,6 +70,7 @@ export function RoleDashboard({ session }: { session: PortalSession }) {
           <p className="mt-3 max-w-2xl text-lg text-grey">{m.intro}</p>
         </div>
         <div className="flex flex-wrap gap-3">
+          {rolesTerrain().includes(role) && <TerrainLink />}
           {role !== "invite" && <LibraryLink />}
           {role === "admin" && <AgrovitaAdminLink />}
         </div>

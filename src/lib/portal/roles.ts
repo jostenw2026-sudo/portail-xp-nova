@@ -28,6 +28,26 @@ export const roleLabels: Record<PortalRole, string> = {
   invite: "Invité (aucun rôle attribué)",
 };
 
+/**
+ * Rôles autorisés à saisir une fiche prospect sur le terrain
+ * (`/portail/terrain`).
+ *
+ * Par défaut « admin » et « expert » : un agent de terrain reçoit le groupe
+ * Authentik `XPN-EXPERTS`, ce qui coûte zéro licence Odoo — c'est tout l'intérêt
+ * de faire écrire le serveur avec le compte de service plutôt que de donner un
+ * accès Odoo à chaque agent.
+ *
+ * La liste est surchargeable par `PORTAL_TERRAIN_ROLES` pour que l'ajout d'un
+ * groupe dédié (par exemple `XPN-TERRAIN` mappé sur un rôle existant) ne demande
+ * pas de modification du code.
+ */
+export function rolesTerrain(): PortalRole[] {
+  const brut = process.env.PORTAL_TERRAIN_ROLES?.trim();
+  const noms = (brut ? brut.split(",") : ["admin", "expert"]).map((r) => r.trim().toLowerCase());
+  const connus: PortalRole[] = ["admin", "client", "expert", "fournisseur", "invite"];
+  return connus.filter((r) => noms.includes(r));
+}
+
 /** Dossiers Odoo Documents visibles selon le rôle (bibliothèque). */
 export const roleFolders: Record<PortalRole, string[]> = {
   admin: ["Public", "Clients", "Experts", "Fournisseurs", "Interne"],

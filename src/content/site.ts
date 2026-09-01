@@ -18,7 +18,7 @@ export const site = {
   country: "Cameroun",
   email: "contact@xp-nova.com",
   phone: "+237 6 70 04 80 00",
-  address: "134, Rue 1813, Vallée Bastos — B.P. 5603, Yaoundé, Cameroun",
+  address: "134, Rue 1813, Vallée Bastos — B.P. 5603, Nlongkak, Yaoundé, Cameroun",
   responsePromise: "48 h",
   legal: {
     forme: "SARL pluripersonnelle",
