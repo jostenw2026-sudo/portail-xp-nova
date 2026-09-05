@@ -32,7 +32,7 @@ export default async function BibliothequePage() {
 
         <div className="mt-8 space-y-8">
           {/* Catalogues spéciaux */}
-          <div className="grid gap-4 md:grid-cols-2">
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             <a
               href="/catalogue-prestations-odt-20260905.pdf"
               target="_blank"
@@ -60,6 +60,22 @@ export default async function BibliothequePage() {
               </div>
               <div className="flex-1">
                 <h3 className="font-semibold text-navy">Catalogue AGROVITA interactif</h3>
+                <p className="text-sm text-grey">HTML • Août 2026</p>
+              </div>
+              <div className="text-gold">→</div>
+            </a>
+
+            <a
+              href="/agrovita-tableau-prestations.html"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-4 rounded-lg border border-line bg-paper p-5 hover:border-gold transition-colors"
+            >
+              <div className="flex h-12 w-12 items-center justify-center rounded bg-gold/10 text-gold">
+                📊
+              </div>
+              <div className="flex-1">
+                <h3 className="font-semibold text-navy">Tableau des prestations AGROVITA</h3>
                 <p className="text-sm text-grey">HTML • Août 2026</p>
               </div>
               <div className="text-gold">→</div>
