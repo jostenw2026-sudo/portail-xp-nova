@@ -30,7 +30,42 @@ export default async function BibliothequePage() {
           Documents, études, guides et ressources accessibles à votre profil.
         </p>
 
-        <div className="mt-8">
+        <div className="mt-8 space-y-8">
+          {/* Catalogues spéciaux */}
+          <div className="grid gap-4 md:grid-cols-2">
+            <a
+              href="/catalogue-prestations-odt-20260905.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-4 rounded-lg border border-line bg-paper p-5 hover:border-gold transition-colors"
+            >
+              <div className="flex h-12 w-12 items-center justify-center rounded bg-gold/10 text-gold">
+                📄
+              </div>
+              <div className="flex-1">
+                <h3 className="font-semibold text-navy">Catalogue des prestations ODT</h3>
+                <p className="text-sm text-grey">PDF • 5 septembre 2026</p>
+              </div>
+              <div className="text-gold">→</div>
+            </a>
+
+            <a
+              href="/catalogue-agrovita-interactif.html"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-4 rounded-lg border border-line bg-paper p-5 hover:border-gold transition-colors"
+            >
+              <div className="flex h-12 w-12 items-center justify-center rounded bg-gold/10 text-gold">
+                🌿
+              </div>
+              <div className="flex-1">
+                <h3 className="font-semibold text-navy">Catalogue AGROVITA interactif</h3>
+                <p className="text-sm text-grey">HTML • Août 2026</p>
+              </div>
+              <div className="text-gold">→</div>
+            </a>
+          </div>
+
           <Panel title={`Documents disponibles (${folders.join(", ")})`}>
             {await withData(
               () => getDocuments(folders),
